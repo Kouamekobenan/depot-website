@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Trash, Users, Mail, Phone, MapPin, Loader2 } from "lucide-react";
 import { customerDto } from "../types/type";

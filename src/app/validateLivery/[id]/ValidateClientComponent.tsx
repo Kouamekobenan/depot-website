@@ -1,6 +1,5 @@
 "use client";
-
-import Navbar from "@/app/components/navbar/Navbar";
+// import Navbar from "@/app/components/navbar/Navbar";
 import { useAuth } from "@/app/context/AuthContext";
 import api from "@/app/prisma/api";
 import {
@@ -212,7 +211,7 @@ export default function ValidateDeliveryClient({
 
   return (
    <div className="flex w-full min-h-screen bg-gray-50">
-         <Navbar />
+         {/* <Navbar /> */}
          <div className="p-8 flex-1">
            {/* En-tête avec design amélioré */}
            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">

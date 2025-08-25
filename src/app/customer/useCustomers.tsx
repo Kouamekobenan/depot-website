@@ -4,7 +4,6 @@ import { customerDto } from "../types/type";
 import { useAuth } from "../context/AuthContext";
 import api from "../prisma/api";
 import toast from "react-hot-toast";
-
 // Types stricts pour l'API
 interface PaginationResponse {
   data: customerDto[];
@@ -14,7 +13,6 @@ interface PaginationResponse {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 }
-
 interface UseCustomersReturn {
   customers: customerDto[];
   currentPage: number;
@@ -78,7 +76,6 @@ export const useCustomers = (limit: number = 10): UseCustomersReturn => {
     },
     [tenantId, limit]
   );
-
   const handleDeleteCustomer = async (
     customerId: string,
     customerName: string
