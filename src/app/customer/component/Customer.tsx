@@ -6,8 +6,6 @@ import Navbar from "@/app/components/navbar/Navbar";
 import CustomerHeader from "../CustomerHeader";
 import CustomerTable from "../CustomerTable";
 import Pagination from "../Pagination";
-
-
 const Customer: React.FC = () => {
   const {
     customers,
