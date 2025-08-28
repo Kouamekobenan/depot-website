@@ -4,7 +4,6 @@ import { Eye, EyeOff, Mail, Lock, LogIn } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Button from "../buttonConnecte/ButtonCont";
-
 // Interface pour typer les données du formulaire
 interface FormData {
   email: string;

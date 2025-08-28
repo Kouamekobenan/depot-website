@@ -77,13 +77,13 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4 placeholder:bg-gray-100">
       <Toaster position="top-right" />
       <div className="w-full max-w-md bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
         <div className="flex justify-end mb-4">
           <button
             onClick={handleBack}
-            className="p-2 cursor-pointer rounded-md bg-gray-200"
+            className="p-2 cursor-pointer rounded-md bg-gray-200 placeholder:text-black"
           >
             Retour
           </button>
@@ -100,7 +100,7 @@ export default function Register() {
             onChange={handleChange}
             required
             placeholder="Saisissez votre adresse mail"
-            className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+            className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white placeholder:text-black"
           />
 
           <div className="relative">
@@ -111,7 +111,7 @@ export default function Register() {
               onChange={handleChange}
               required
               placeholder="Entrez votre mot de passe"
-              className="w-full p-2 pr-10 border rounded-md dark:bg-gray-700 dark:text-white"
+              className="w-full p-2 pr-10 border rounded-md dark:bg-gray-700 dark:text-white placeholder:text-black"
             />
             <button
               type="button"
@@ -129,7 +129,7 @@ export default function Register() {
             onChange={handleChange}
             required
             placeholder="Saisissez votre nom"
-            className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+            className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white placeholder:text-black"
           />
           <input
             type="tel"
@@ -138,7 +138,7 @@ export default function Register() {
             onChange={handleChange}
             required
             placeholder="Ex: 0700000000"
-            className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+            className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white placeholder:text-black"
           />
           <select
             name="role"

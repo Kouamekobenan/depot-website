@@ -50,19 +50,15 @@ const TokenManager = {
     }
   },
 };
-
 // Configuration de base
 const api = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_URL ||
-    "https://api-boisson-production-bd26.up.railway.app",
+  baseURL:"https://api-boisson-production-bd26.up.railway.app",
   timeout: 15000, // Augmenté pour les connexions lentes
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
-
 // Intercepteur pour les requêtes (ajouter le token automatiquement)
 api.interceptors.request.use(
   async (config) => {
@@ -138,9 +134,7 @@ api.interceptors.response.use(
 
 // Export du gestionnaire de tokens pour l'utiliser ailleurs dans l'app
 export { TokenManager };
-
 export default api;
-
 // Utilitaires
 export const formatDate = (dateString: Date | string): string => {
   const date =
@@ -205,104 +199,3 @@ export const AuthUtils = {
     }
   },
 };
-
-// src/lib/api.ts
-// import axios, { AxiosError, AxiosResponse } from "axios";
-// import { OrderDto } from "../types/type";
-
-// // Récupérer le token depuis localStorage (pour la version Web)
-// const getToken = async (): Promise<string | null> => {
-//   if (typeof window === "undefined") return null;
-
-//   if (window.electronAPI) {
-//     const token = await window.electronAPI.getToken();
-//     return token ?? null; // transforme undefined en null
-//   } else {
-//     return localStorage.getItem("auth_token"); // déjà string | null
-//   }
-// };
-
-// // Configuration de base
-// const api = axios.create({
-//   baseURL:
-//     process.env.NEXT_PUBLIC_API_URL ||
-//     "https://api-boisson-production-bd26.up.railway.app",
-//   timeout: 15000,
-//   headers: {
-//     "Content-Type": "application/json",
-//     Accept: "application/json",
-//   },
-// });
-
-// // Intercepteur requêtes
-// api.interceptors.request.use(
-//   async (config) => {
-//     const token = await getToken();
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
-
-// // Intercepteur réponses
-// api.interceptors.response.use(
-//   (response: AxiosResponse) => response,
-//   async (error: AxiosError) => {
-//     if (error.response?.status === 401) {
-//       // Token expiré ou invalide
-//       if (typeof window !== "undefined") {
-//         if (window.electronAPI) {
-//           await window.electronAPI.deleteToken();
-//         } else {
-//           localStorage.removeItem("token");
-//         }
-//         window.location.href = "/login";
-//       }
-//     }
-
-//     if (!error.response) {
-//       console.error("Erreur réseau:", error.message);
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default api;
-
-// // ------------------- UTILITAIRES -------------------
-
-// export const formatDate = (dateString: Date | string): string => {
-//   const date =
-//     typeof dateString === "string" ? new Date(dateString) : dateString;
-//   return date.toLocaleDateString("fr-FR", {
-//     year: "numeric",
-//     month: "long",
-//     day: "numeric",
-//     hour: "2-digit",
-//     minute: "2-digit",
-//   });
-// };
-
-// export function sendOrderViaWhatsApp(
-//   order: OrderDto,
-//   supplierPhone: string
-// ): void {
-//   try {
-//     const orderMessage = encodeURIComponent(
-//       `🛒 *Nouvelle Commande 12Dépôt*\n\n` +
-//         `📋 Commande: ${order.id || "N/A"}\n` +
-//         `📅 Date: ${formatDate(new Date())}\n` +
-//         `Merci pour votre service !`
-//     );
-
-//     const whatsappUrl = `https://wa.me/${supplierPhone}?text=${orderMessage}`;
-//     if (typeof window !== "undefined") {
-//       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-//     }
-//   } catch (error) {
-//     console.error("Erreur lors de l'envoi WhatsApp:", error);
-//   }
-// }

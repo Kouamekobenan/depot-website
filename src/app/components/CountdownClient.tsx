@@ -58,6 +58,7 @@ export default function CountdownClient() {
               height={180}
               alt="Logo de l'application"
               className="drop-shadow-lg"
+              priority
             />
           </div>
         </div>

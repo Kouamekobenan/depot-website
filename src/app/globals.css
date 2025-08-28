@@ -1,20 +1,26 @@
 @import "tailwindcss";
 
+/* === Styles Input === */
 .input {
   @apply border border-gray-300 rounded-md px-3 py-2 text-sm w-[350px]
-         text-gray-900 dark:text-white 
-         bg-white dark:bg-gray-800 
+         text-gray-900 
+         bg-white 
          focus:outline-none focus:ring-2 focus:ring-blue-500 
          focus:border-transparent;
   transition: all 0.2s;
 }
+
+/* === Centrer le contenu === */
 .centered-content {
   @apply flex justify-center items-center text-center;
 }
+
+/* === Card === */
 .card-box {
   @apply w-[200px] bg-white border border-gray-300 rounded-md p-4 shadow-sm flex flex-col justify-between font-semibold;
 }
 
+/* === Variables CSS (mode clair forcé) === */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -27,13 +33,16 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* ❌ Suppression du dark mode auto
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
+*/
 
+/* === Body === */
 body {
   background: var(--background);
   color: var(--foreground);

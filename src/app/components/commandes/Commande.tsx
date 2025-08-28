@@ -302,7 +302,6 @@ const CreateOrderComponent = () => {
       setLoading(false);
     }
   };
-
   // Composant d'affichage d'erreur
   const ErrorMessage = ({ message }: { message: string }) => (
     <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
@@ -310,19 +309,16 @@ const CreateOrderComponent = () => {
       <span>{message}</span>
     </div>
   );
-
   // Composant de chargement
   const LoadingSpinner = () => (
     <div className="flex items-center justify-center py-8">
       <Loader2 className="w-6 h-6 animate-spin text-orange-600" />
     </div>
   );
-
   // Obtenir les produits en rupture de stock
   const getOutOfStockProducts = () => {
     return filteredProducts.filter((product) => product.stock === 0);
   };
-
   // Composant pour afficher un produit avec ses métriques de rentabilité
   const ProductCard = ({ product }: { product: productItems }) => {
     const quantityInCart = getProductQuantityInCart(product.id);
@@ -625,7 +621,7 @@ const CreateOrderComponent = () => {
               placeholder="Rechercher un produit..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border placeholder:text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
             {searchTerm !== debouncedSearchTerm && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
