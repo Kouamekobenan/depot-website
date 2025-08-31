@@ -22,7 +22,6 @@ const TokenManager = {
     }
     return null;
   },
-
   async setToken(token: string): Promise<void> {
     try {
       if (typeof window !== "undefined" && window.electronAPI) {

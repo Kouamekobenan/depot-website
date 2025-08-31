@@ -175,7 +175,6 @@ export default function PageClientCredit() {
           page: currentPage,
         },
       });
-
       if (result.data && Array.isArray(result.data.data)) {
         setSales(result.data.data);
         setTotalPages(result.data.totalPages || 1);
@@ -213,9 +212,7 @@ export default function PageClientCredit() {
         directSaleId: selectedSale?.id,
         amount: Number(creditPayment.amount),
       });
-
       toast.success("Crédit payé avec succès!");
-
       // Réinitialiser le formulaire et fermer le modal
       setCreditPayment({
         directSaleId: "",
@@ -452,7 +449,6 @@ export default function PageClientCredit() {
               </div>
             </div>
           </div>
-
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="flex items-center justify-between">
               <div>
@@ -468,7 +464,6 @@ export default function PageClientCredit() {
               </div>
             </div>
           </div>
-
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="flex items-center justify-between">
               <div>
@@ -630,7 +625,7 @@ export default function PageClientCredit() {
                               <tr key={item.id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                   <div className="text-sm font-medium text-gray-900">
-                                    {item.productName}
+                                    {item.id}
                                   </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">

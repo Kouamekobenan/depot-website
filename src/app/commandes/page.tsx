@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 import React from "react";
 import Navbar from "../components/navbar/Navbar";
 import CreateOrderComponent from "../components/commandes/Commande";

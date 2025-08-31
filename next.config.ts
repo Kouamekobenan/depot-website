@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // CRUCIAL : Configuration pour Electron - génère des fichiers statiques
+  // output: "export",
+
   // Configuration pour les pages statiques
   trailingSlash: true,
 
@@ -17,12 +20,11 @@ const nextConfig: NextConfig = {
     CUSTOM_KEY: "my-value",
   },
 
-  // Configuration pour autoriser les connexions réseau (FORMAT CORRECT)
-  allowedDevOrigins: [
-    "http://10.29.206.24:3000",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-  ],
+  // Désactiver certaines optimisations qui causent des problèmes avec les hooks
+  experimental: {
+    esmExternals: false, // Peut aider avec les erreurs de hooks
+  },
+
   webpack: (config, { dev }) => {
     if (dev) {
       config.watchOptions = {
@@ -32,7 +34,8 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
-  // Headers CORS pour le développement (CORRIGÉ)
+
+  // Headers CORS pour le développement
   async headers() {
     return [
       {
@@ -40,7 +43,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "*", // Changé pour autoriser toutes les origines en dev
+            value: "*",
           },
           {
             key: "Access-Control-Allow-Methods",

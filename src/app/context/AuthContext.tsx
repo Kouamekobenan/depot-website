@@ -1,4 +1,3 @@
-
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { User } from "../types/type";
@@ -39,7 +38,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const checkAuth = async () => {
       try {
         setLoading(true);
-        const token = await TokenManager.getToken();
+        // ✅ TokenManager ne s’exécutera que côté client
+        const token =
+          typeof window !== "undefined" ? await TokenManager.getToken() : null;
 
         if (!token) {
           setIsAuthenticated(false);
@@ -53,7 +54,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(userData);
           setIsAuthenticated(true);
         } else {
-          // Si pas d'utilisateur, nettoyer
           await TokenManager.deleteToken();
           setUser(null);
           setIsAuthenticated(false);
@@ -68,7 +68,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    checkAuth();
+    // ✅ checkAuth sera exécuté uniquement côté client
+    if (typeof window !== "undefined") {
+      checkAuth();
+    }
   }, []);
 
   const login = async (email: string, password: string): Promise<User> => {
