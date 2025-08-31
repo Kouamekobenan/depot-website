@@ -1,13 +1,12 @@
 import Navbar from "@/app/components/navbar/Navbar";
 import ValidateDeliveryClient from "./ValidateClientComponent";
 
-export const dynamic = "auto";
-
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 // (optionnel) si tu veux générer des params statiques
 export async function generateStaticParams() {
   return [];
 }
-
 export default async function ValidateDeliveryPage({
   params,
 }: {

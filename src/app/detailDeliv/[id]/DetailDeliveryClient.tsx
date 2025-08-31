@@ -1,6 +1,5 @@
 // renderer/app/detailDeliv/[id]/DetailDeliveryClient.tsx
 "use client";
-
 import { Button } from "@/app/components/forms/Button";
 import Navbar from "@/app/components/navbar/Navbar";
 import api, { formatDate } from "@/app/prisma/api";

@@ -3,7 +3,6 @@ import { deliveryDto } from "@/app/types/type";
 import { notFound } from "next/navigation";
 import DeliveryInvoiceClient from "../DeliveryInvoiceClient";
 import api from "@/app/prisma/api";
-
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export async function generateStaticParams() {
