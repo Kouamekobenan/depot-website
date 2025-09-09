@@ -34,8 +34,10 @@
     "../electron/preload.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
-    "out/types/**/*.ts"
-, "next.config.js"  ],
+    "next.config.js",
+    "out/types/**/*.ts",
+    "../dist/renderer/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

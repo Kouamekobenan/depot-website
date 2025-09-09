@@ -1,6 +1,7 @@
 import DeliveryStatsClient from "./PerformanceClient";
 
-export const dynamic = "auto";
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 // (optionnel) si tu veux préparer des params statiques
 export async function generateStaticParams() {

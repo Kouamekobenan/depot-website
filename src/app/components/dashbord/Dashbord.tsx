@@ -349,21 +349,21 @@ export default function Dashboard({ lowStockThreshold = 10 }: DashboardProps) {
   // Rendu pour l'état de chargement
   if (isLoading && !isRefreshing) {
     return (
-      <div className="w-full p-8 min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-900 font-['Inter',sans-serif]">
-        <div className="w-full h-[600px] bg-gray-800/40 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-gray-700/30">
+      <div className="w-full p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-900 font-['Inter',sans-serif]">
+        <div className="w-full h-[400px] sm:h-[600px] bg-gray-800/40 backdrop-blur-xl p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-700/30">
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <div className="relative mb-8">
-                <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-orange-500/20 border-t-orange-500 shadow-lg"></div>
-                <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-2 border-orange-400/40"></div>
+              <div className="relative mb-6 sm:mb-8">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-orange-500/20 border-t-orange-500 shadow-lg"></div>
+                <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 sm:h-16 sm:w-16 border-2 border-orange-400/40"></div>
               </div>
-              <p className="text-white font-bold text-xl tracking-wide">
+              <p className="text-white font-bold text-lg sm:text-xl tracking-wide">
                 Chargement des données...
               </p>
-              <p className="text-gray-400 text-sm mt-3 font-medium tracking-wide">
+              <p className="text-gray-400 text-sm mt-2 sm:mt-3 font-medium tracking-wide">
                 Connexion sécurisée à l&apos;API en cours
               </p>
-              <div className="mt-8 flex justify-center gap-2">
+              <div className="mt-6 sm:mt-8 flex justify-center gap-2">
                 <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce"></div>
                 <div
                   className="w-2 h-2 bg-orange-400 rounded-full animate-bounce"
@@ -380,30 +380,29 @@ export default function Dashboard({ lowStockThreshold = 10 }: DashboardProps) {
       </div>
     );
   }
-
   // Rendu pour l'état d'erreur
   if (error) {
     return (
-      <div className="w-full p-8 min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-900 font-['Inter',sans-serif]">
-        <div className="w-full h-[600px] bg-red-900/20 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-red-700/30">
+      <div className="w-full p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-900 font-['Inter',sans-serif]">
+        <div className="w-full h-[400px] sm:h-[600px] bg-red-900/20 backdrop-blur-xl p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl shadow-2xl border border-red-700/30">
           <div className="flex items-center justify-center h-full">
-            <div className="text-center max-w-md">
-              <div className="text-red-400 text-8xl mb-6 filter drop-shadow-lg">
+            <div className="text-center max-w-sm sm:max-w-md px-4">
+              <div className="text-red-400 text-6xl sm:text-8xl mb-4 sm:mb-6 filter drop-shadow-lg">
                 ⚠️
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4 tracking-wide">
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4 tracking-wide">
                 Erreur de chargement
               </h3>
-              <p className="text-gray-300 mb-8 text-sm leading-relaxed font-medium">
+              <p className="text-gray-300 mb-6 sm:mb-8 text-sm leading-relaxed font-medium">
                 {error}
               </p>
               <button
                 onClick={fetchAllData}
                 disabled={isRefreshing}
-                className="px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white rounded-2xl hover:from-orange-500 hover:to-orange-400 transition-all duration-300 font-bold text-sm tracking-wide shadow-xl hover:shadow-orange-500/25 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white rounded-xl sm:rounded-2xl hover:from-orange-500 hover:to-orange-400 transition-all duration-300 font-bold text-sm tracking-wide shadow-xl hover:shadow-orange-500/25 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {isRefreshing ? (
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center justify-center gap-2">
                     <RefreshCw className="w-4 h-4 animate-spin" />
                     Rechargement...
                   </span>
@@ -420,15 +419,14 @@ export default function Dashboard({ lowStockThreshold = 10 }: DashboardProps) {
 
   // Rendu principal
   return (
-    <div className="w-full p-8 min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-900 font-['Inter',sans-serif] relative overflow-x-hidden">
+    <div className="w-full p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-900 font-['Inter',sans-serif] relative overflow-x-hidden">
       {/* Effets de fond décoratifs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-orange-500/5 to-amber-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-20 sm:-top-40 -right-20 sm:-right-40 w-40 sm:w-80 h-40 sm:h-80 bg-orange-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-20 sm:-bottom-40 -left-20 sm:-left-40 w-48 sm:w-96 h-48 sm:h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-gradient-to-r from-orange-500/5 to-amber-500/5 rounded-full blur-3xl"></div>
       </div>
-
-      <div className="relative z-10 space-y-8">
+      <div className="relative z-10 space-y-6 sm:space-y-8">
         {/* En-tête avec onglets */}
         <div className="bg-gray-800/40 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-gray-700/30">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
@@ -500,14 +498,14 @@ export default function Dashboard({ lowStockThreshold = 10 }: DashboardProps) {
         {activeTab === "stock" && (
           <>
             {/* Cartes de statistiques de stock */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
               <div className="bg-gray-800/40 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-gray-700/30 hover:shadow-orange-500/10 transition-all duration-300 transform hover:scale-105 group">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <p className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-3">
                       Total Produits
                     </p>
-                    <p className="text-xl font-black text-white tracking-tight">
+                    <p className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight">
                       {stockStats.totalProducts}
                     </p>
                   </div>
@@ -584,9 +582,9 @@ export default function Dashboard({ lowStockThreshold = 10 }: DashboardProps) {
 
             {/* Graphique des stocks */}
             <div className="w-full bg-gray-800/40 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-gray-700/30">
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
                 <div>
-                  <h2 className="text-3xl font-black text-white tracking-tight mb-2">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight mb-2">
                     Analyse du Stock par Produit
                   </h2>
                   <p className="text-gray-400 font-medium tracking-wide">
@@ -636,7 +634,7 @@ export default function Dashboard({ lowStockThreshold = 10 }: DashboardProps) {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={chartData}
-                      margin={{ top: 30, right: 40, left: 30, bottom: 80 }}
+                      margin={{ top: 20, right: 20, left: 10, bottom: 50 }}
                     >
                       <CartesianGrid
                         strokeDasharray="3 3"
