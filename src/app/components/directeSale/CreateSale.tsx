@@ -309,40 +309,57 @@ export default function DirectSaleForm() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="">
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+          <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+            {/* Section principale - Gauche */}
+            <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-3">
+              {/* Bouton retour */}
+              <div className="order-first sm:order-none">
                 <button
                   onClick={handleBack}
-                  className="bg-gray-700 text-white hover:bg-gray-800 p-2 cursor-pointer rounded-md"
+                  className="w-full sm:w-auto bg-gray-700 text-white hover:bg-gray-800 p-2 cursor-pointer rounded-md text-sm font-medium flex items-center justify-center"
                 >
-                  Retour
+                  <span className="sm:hidden">← Retour</span>
+                  <span className="hidden sm:inline">Retour</span>
                 </button>
               </div>
-              <div className="bg-orange-600 p-2 rounded-lg">
-                <ShoppingCart className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Espace de Vente Directe de:{" "}
-                  <span className="text-xl text-green-700 bg-green-100 p-1 rounded-md">
-                    {userName}
-                  </span>
-                </h1>
-                <p className="text-gray-600">Gestion des ventes et clients</p>
+
+              {/* Icône et titre */}
+              <div className="flex items-start space-x-3 flex-1">
+                <div className="bg-orange-600 p-2 rounded-lg flex-shrink-0">
+                  <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 leading-tight">
+                    <span className="block sm:inline">
+                      Espace de Vente Directe de:
+                    </span>
+                    <span className="block sm:inline mt-1 sm:mt-0 sm:ml-2">
+                      <span className="inline-block text-base sm:text-lg lg:text-xl text-green-700 bg-green-100 px-2 py-1 rounded-md break-words">
+                        {userName}
+                      </span>
+                    </span>
+                  </h1>
+                  <p className="text-sm sm:text-base text-gray-600 mt-1">
+                    Gestion des ventes et clients
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="bg-green-50 px-4 py-2 rounded-lg">
-                <span className="text-green-700 font-medium">
-                  Vente #: {formatDate(NowDate)}
+
+            {/* Section droite - Informations de vente */}
+            <div className="flex justify-center lg:justify-end">
+              <div className="bg-green-50 px-3 py-2 sm:px-4 rounded-lg">
+                <span className="text-green-700 font-medium text-sm sm:text-base">
+                  <span className="hidden sm:inline">Vente #: </span>
+                  <span className="sm:hidden">Vente: </span>
+                  {formatDate(NowDate)}
                 </span>
               </div>
             </div>
           </div>
         </div>
-
         <div className="grid grid-cols-12 gap-6">
           {/* Client Form Sidebar */}
           {showClientForm && (

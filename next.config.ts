@@ -1,29 +1,28 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // CRUCIAL : Configuration pour Electron - génère des fichiers statiques
-  // output: "export",
-  distDir: "../dist/renderer",
-  // Configuration pour les pages statiques
+  // Dossier de build personnalisé (attention avec Railway : le dist doit rester dans le repo)
+  // distDir: "../dist/renderer",
+  output: "export",
+
+  // Génère des URL avec / à la fin
   trailingSlash: true,
 
-  // Configuration pour les images
+  // Images non optimisées (utile avec Electron)
   images: {
     unoptimized: true,
   },
 
-  // Configuration pour éviter les erreurs de hooks
+  // Mode strict React
   reactStrictMode: true,
 
-  // Configuration pour le développement
+  // Variables d’environnement (⚠ Railway injecte ses propres env vars, pas besoin de forcer ici)
   env: {
     CUSTOM_KEY: "my-value",
   },
 
-  // Désactiver certaines optimisations qui causent des problèmes avec les hooks
-  experimental: {
-    esmExternals: false, // Peut aider avec les erreurs de hooks
-  },
+  // ⚠ Retiré : experimental.esmExternals → deprecated
+  // Tu n’as plus besoin de ça avec Next 15
 
   webpack: (config, { dev }) => {
     if (dev) {
@@ -34,8 +33,6 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
-
-  // Headers CORS pour le développement
 };
 
 export default nextConfig;

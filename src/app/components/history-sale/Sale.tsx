@@ -584,7 +584,6 @@ export const Sale = () => {
             </div>
           </div>
         </div>
-
         {/* Messages d'erreur et de chargement */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-orange-700 px-3 sm:px-4 py-3 rounded mb-4 text-sm">

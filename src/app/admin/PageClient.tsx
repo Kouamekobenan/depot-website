@@ -109,7 +109,6 @@ const PageClientAdmin = () => {
     <div className="group relative bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-6 lg:p-7 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300 hover:-translate-y-0.5 overflow-hidden">
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-slate-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
       {/* Content */}
       <div className="relative">
         <div className="flex items-start justify-between mb-4 sm:mb-5">
@@ -152,7 +151,6 @@ const PageClientAdmin = () => {
       </div>
     </div>
   );
-
   const LoadingSkeleton = () => (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-6 lg:p-7 animate-pulse">
       <div className="flex items-center justify-between mb-4 sm:mb-5">
@@ -387,7 +385,6 @@ const PageClientAdmin = () => {
               </>
             )}
           </div>
-
           {/* Enhanced Period Analysis */}
           <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
             {/* Background decoration */}
