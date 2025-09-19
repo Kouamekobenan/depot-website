@@ -1,10 +1,8 @@
 import type { NextConfig } from "next";
-
 const nextConfig: NextConfig = {
   // Dossier de build personnalisé (attention avec Railway : le dist doit rester dans le repo)
   // distDir: "../dist/renderer",
-  output: "export",
-
+  // output: "export",
   // Génère des URL avec / à la fin
   trailingSlash: true,
 
@@ -20,7 +18,6 @@ const nextConfig: NextConfig = {
   env: {
     CUSTOM_KEY: "my-value",
   },
-
   // ⚠ Retiré : experimental.esmExternals → deprecated
   // Tu n’as plus besoin de ça avec Next 15
 
