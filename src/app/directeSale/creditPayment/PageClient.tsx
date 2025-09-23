@@ -386,7 +386,7 @@ export default function PageClientCredit() {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <h1 className="text-sm md:text-3xl font-bold text-gray-900 flex items-center gap-3">
                 <button
                   onClick={handleBack}
                   className="bg-gray-600 p-1 text-white rounded-md cursor-pointer hover:bg-gray-700 transition-colors"

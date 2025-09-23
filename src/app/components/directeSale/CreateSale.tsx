@@ -12,17 +12,12 @@ import {
   X,
   Check,
   ShoppingCart,
-  Users,
   Trash2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { handleBack } from "@/app/types/handleApi";
 import { useRouter } from "next/navigation";
-import {
-  StylesConfig,
-  GroupBase,
-  CSSObjectWithLabel,
-} from "react-select";
+import { StylesConfig, GroupBase, CSSObjectWithLabel } from "react-select";
 
 interface ProductOption {
   value: string;
@@ -41,14 +36,6 @@ interface SaleItem {
   productId: string;
   quantity: number;
   unitPrice: number;
-}
-
-interface ClientFormData {
-  name: string;
-  phone: string;
-  email: string;
-  address: string;
-  tenantId: string;
 }
 
 // Types pour les styles de react-select
@@ -72,17 +59,9 @@ export default function DirectSaleForm() {
     { productId: "", quantity: 1, unitPrice: 0 },
   ]);
   const [customers, setCustomers] = useState<customerDto[]>([]);
-  const [showClientForm, setShowClientForm] = useState(false);
   const [selectedClient, setSelectedClient] = useState<customerDto | null>(
     null
   );
-  const [clientForm, setClientForm] = useState<ClientFormData>({
-    name: "",
-    phone: "",
-    email: "",
-    address: "",
-    tenantId: "",
-  });
   const [isLoading, setIsLoading] = useState(false);
   const NowDate = new Date();
 
@@ -152,48 +131,11 @@ export default function DirectSaleForm() {
     0
   );
 
-  const handleClientSubmit = async () => {
-    if (
-      !clientForm.name ||
-      !clientForm.phone ||
-      !clientForm.email ||
-      !clientForm.address
-    ) {
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await api.post("/customer", {
-        ...clientForm,
-        tenantId: tenantId,
-      });
-      const newClient = response.data;
-      setCustomers([...customers, newClient]);
-      setSelectedClient(newClient);
-      setCustomerId(newClient.id);
-      setClientForm({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-        tenantId: "",
-      });
-      setShowClientForm(false);
-      toast.success("Client créé avec succès!");
-    } catch (error) {
-      console.error("Erreur lors de la création du client", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleSaleTypeChange = (type: "cash" | "credit") => {
     setIsCredit(type === "credit");
     if (type === "cash") {
       setSelectedClient(null);
       setCustomerId("");
-      setShowClientForm(false);
     }
   };
 
@@ -222,6 +164,10 @@ export default function DirectSaleForm() {
       setSelectedClient(null);
       setCustomerId("");
     }
+  };
+
+  const handleNewClientRedirect = () => {
+    router.push("/client");
   };
 
   const handleSubmit = async () => {
@@ -347,7 +293,6 @@ export default function DirectSaleForm() {
                 </div>
               </div>
             </div>
-
             {/* Section droite - Informations de vente */}
             <div className="flex justify-center lg:justify-end">
               <div className="bg-green-50 px-3 py-2 sm:px-4 rounded-lg">
@@ -360,115 +305,10 @@ export default function DirectSaleForm() {
             </div>
           </div>
         </div>
+
         <div className="grid grid-cols-12 gap-6">
-          {/* Client Form Sidebar */}
-          {showClientForm && (
-            <div className="col-span-4">
-              <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-2">
-                    <Users className="h-5 w-5 text-orange-600" />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Nouveau Client
-                    </h3>
-                  </div>
-                  <button
-                    onClick={() => setShowClientForm(false)}
-                    className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    <X className="h-5 w-5 text-gray-400" />
-                  </button>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nom complet
-                    </label>
-                    <input
-                      type="text"
-                      value={clientForm.name}
-                      onChange={(e) =>
-                        setClientForm({ ...clientForm, name: e.target.value })
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="Jean Dupont"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Téléphone
-                    </label>
-                    <input
-                      type="tel"
-                      value={clientForm.phone}
-                      onChange={(e) =>
-                        setClientForm({ ...clientForm, phone: e.target.value })
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="+2250700000000"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={clientForm.email}
-                      onChange={(e) =>
-                        setClientForm({ ...clientForm, email: e.target.value })
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="jean.dupont@example.com"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Adresse
-                    </label>
-                    <textarea
-                      value={clientForm.address}
-                      onChange={(e) =>
-                        setClientForm({
-                          ...clientForm,
-                          address: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
-                      rows={3}
-                      placeholder="Abidjan, Cocody Riviera"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleClientSubmit}
-                    disabled={
-                      isLoading ||
-                      !clientForm.name ||
-                      !clientForm.phone ||
-                      !clientForm.email ||
-                      !clientForm.address
-                    }
-                    className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                  >
-                    {isLoading ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <Check className="h-4 w-4" />
-                        <span>Créer le client</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Main Content */}
-          <div className={`${showClientForm ? "col-span-8" : "col-span-12"}`}>
+          {/* Main Content - Toujours en pleine largeur maintenant */}
+          <div className="col-span-12">
             {/* Sale Type Selection */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -508,7 +348,7 @@ export default function DirectSaleForm() {
                     Sélection du client
                   </h3>
                   <button
-                    onClick={() => setShowClientForm(true)}
+                    onClick={handleNewClientRedirect}
                     className="flex items-center space-x-2 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
                   >
                     <Plus className="h-4 w-4" />
@@ -700,7 +540,6 @@ export default function DirectSaleForm() {
                   </div>
                 </div>
               </div>
-
               {/* Récapitulatif financier - 1/4 de la largeur, sticky */}
               <div className="xl:col-span-1">
                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 shadow-xl rounded-2xl p-6 space-y-6 sticky top-6">
@@ -709,7 +548,6 @@ export default function DirectSaleForm() {
                       Récapitulatif (FCFA)
                     </h3>
                   </div>
-
                   {/* Total général */}
                   <div className="bg-white rounded-xl p-4 shadow-sm border border-orange-100">
                     <div className="flex items-center justify-between">
@@ -721,13 +559,11 @@ export default function DirectSaleForm() {
                       </span>
                     </div>
                   </div>
-
                   {/* Montant payé avec bouton Soldé */}
                   <div className="bg-white rounded-xl p-4 shadow-sm border border-orange-100">
                     <label className="block text-sm font-medium text-gray-700 mb-3">
                       Montant payé
                     </label>
-
                     {/* Container pour input et bouton */}
                     <div className="flex flex-col gap-2">
                       <input
@@ -762,7 +598,6 @@ export default function DirectSaleForm() {
                         )}
                       </button>
                     </div>
-
                     {/* Indicateur visuel quand c'est soldé */}
                     {amountPaid === totalPrice && totalPrice > 0 && (
                       <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg">
@@ -775,7 +610,6 @@ export default function DirectSaleForm() {
                       </div>
                     )}
                   </div>
-
                   {/* Reste à payer */}
                   <div className="bg-white rounded-xl p-4 shadow-sm border border-red-100">
                     <div className="flex items-center justify-between">
@@ -816,10 +650,10 @@ export default function DirectSaleForm() {
                 </div>
               </div>
             </div>
-
             {/* Actions */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex justify-end space-x-4">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+              {/* Version mobile : boutons empilés verticalement */}
+              <div className="flex flex-col sm:flex-row sm:justify-end space-y-3 sm:space-y-0 sm:space-x-4">
                 <button
                   onClick={() => {
                     setSaleItems([
@@ -830,7 +664,7 @@ export default function DirectSaleForm() {
                     setSelectedClient(null);
                     setIsCredit(false);
                   }}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="w-full sm:w-auto px-4 sm:px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
                 >
                   Réinitialiser
                 </button>
@@ -841,7 +675,7 @@ export default function DirectSaleForm() {
                     (isCredit && !customerId) ||
                     saleItems.some((item) => !item.productId)
                   }
-                  className={`px-6 py-3 rounded-lg transition-colors flex items-center space-x-2 ${
+                  className={`w-full sm:w-auto px-4 sm:px-6 py-3 rounded-lg transition-colors flex items-center justify-center space-x-2 text-sm sm:text-base ${
                     isLoading ||
                     (isCredit && !customerId) ||
                     saleItems.some((item) => !item.productId)
@@ -850,10 +684,10 @@ export default function DirectSaleForm() {
                   }`}
                 >
                   {isLoading ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
                   ) : (
                     <>
-                      <Check className="h-5 w-5" />
+                      <Check className="h-4 w-4 sm:h-5 sm:w-5" />
                       <span>Enregistrer la vente</span>
                     </>
                   )}
