@@ -9,6 +9,8 @@ import {
   Edit,
   ShoppingCart,
   Plus,
+  Menu,
+  X,
 } from "lucide-react";
 import { productItems } from "@/app/types/type";
 import { Button } from "../forms/Button";
@@ -17,6 +19,7 @@ import Loader from "../loader/Loder";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
+
 // Types et interfaces
 interface PaginatedResponse {
   products: productItems[];
@@ -26,19 +29,23 @@ interface PaginatedResponse {
   page: number;
   limit: number;
 }
+
 interface ProductFilters {
   name?: string;
   page: number;
   limit: number;
 }
+
 interface paginateItem {
   limit: number;
   page: number;
   name?: string;
 }
+
 // Configuration des constantes
 const PRODUCTS_PER_PAGE = 5;
 const DEBOUNCE_DELAY = 300;
+
 // Hook personnalisé pour le debounce
 const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -69,10 +76,12 @@ export default function DataProduct() {
   const [deletingProducts, setDeletingProducts] = useState<Set<string>>(
     new Set()
   );
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const router = useRouter();
   const debouncedSearchTerm = useDebounce(searchTerm, DEBOUNCE_DELAY);
   const tenantId = user?.tenantId;
+
   // Gestionnaire d'erreurs API amélioré
   const handleApiError = useCallback(
     (error: unknown, context: string): string => {
@@ -185,6 +194,7 @@ export default function DataProduct() {
       });
     }
   };
+
   // Effet pour charger les produits
   useEffect(() => {
     const filters: ProductFilters = {
@@ -229,92 +239,93 @@ export default function DataProduct() {
     router.push("/products/add");
   }, [router]);
 
-  // Composant d'en-tête du tableau
+  // Composant d'en-tête du tableau pour desktop
   const TableHeader = () => (
-    <div className="grid grid-cols-6 bg-gradient-to-r from-orange-50 to-green-50 px-6 py-4 font-semibold text-gray-700 text-sm border-b border-gray-200">
+    <div className="hidden lg:grid lg:grid-cols-6 bg-gradient-to-r from-orange-50 to-green-50 px-4 xl:px-6 py-4 font-semibold text-gray-700 text-sm border-b border-gray-200">
       <div className="flex items-center gap-2">
         <Package size={16} className="text-orange-600" />
-        Nom du produit
+        <span className="truncate">Nom du produit</span>
       </div>
-      <div>Description</div>
-      <div className="text-center">Stock disponible</div>
-      <div className="text-right">Prix d&apos;achat (Fcfa)</div>
-      <div className="text-right">Prix de vente(Fcfa)</div>
+      <div className="truncate">Description</div>
+      <div className="text-center">Stock</div>
+      <div className="text-right">Prix achat</div>
+      <div className="text-right">Prix vente</div>
       <div className="text-center">Actions</div>
     </div>
   );
 
-  // Composant ligne de produit
+  // Composant ligne de produit pour desktop
   const ProductRow = ({ product }: { product: productItems }) => {
     const isDeleting = deletingProducts.has(product.id);
     const isLowStock = product.stock < 10;
+
     return (
-      <div className="grid grid-cols-6 items-center px-6 py-4 bg-white border-b border-gray-100 hover:bg-orange-50/30 transition-all duration-200">
+      <div className="hidden lg:grid lg:grid-cols-6 items-center px-4 xl:px-6 py-4 bg-white border-b border-gray-100 hover:bg-orange-50/30 transition-all duration-200">
         <div
-          className="font-medium text-gray-900 truncate"
+          className="font-medium text-gray-900 truncate pr-2"
           title={product.name}
         >
           {product.name}
         </div>
         <div
-          className="text-gray-600 text-sm truncate"
+          className="text-gray-600 text-sm truncate pr-2"
           title={product.description || ""}
         >
           {product.description || "—"}
         </div>
         <div className="text-center">
           <span
-            className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+            className={`inline-flex items-center px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium ${
               isLowStock
                 ? "bg-red-100 text-red-800 border border-red-200"
                 : "bg-green-100 text-green-800 border border-green-200"
             }`}
           >
             {product.stock}
-            {isLowStock && <AlertCircle size={14} className="ml-1" />}
+            {isLowStock && <AlertCircle size={12} className="ml-1" />}
           </span>
         </div>
-        <div className="text-center font-semibold text-gray-900">
+        <div className="text-right font-semibold text-gray-900 text-sm">
           {product.purchasePrice.toLocaleString()}
         </div>
-        <div className="text-center font-semibold text-green-700">
+        <div className="text-right font-semibold text-green-700 text-sm">
           {product.price.toLocaleString()}
         </div>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-1 xl:gap-2">
           {user?.role === "MANAGER" && (
             <>
               <Link
                 href={`/products/add?id=${product.id}`}
-                className="inline-flex items-center justify-center w-8 h-8 text-blue-600 hover:bg-blue-100 rounded-lg transition-all duration-200 group"
+                className="inline-flex items-center justify-center w-7 h-7 xl:w-8 xl:h-8 text-blue-600 hover:bg-blue-100 rounded-lg transition-all duration-200 group"
                 title="Modifier le produit"
               >
                 <Edit
-                  size={16}
-                  className="group-hover:scale-110 transition-transform"
+                  size={14}
+                  className="xl:w-4 xl:h-4 group-hover:scale-110 transition-transform"
                 />
               </Link>
               <button
                 onClick={() => handleDeleteProduct(product.id)}
                 disabled={isDeleting}
-                className="inline-flex items-center justify-center w-8 h-8 text-red-600 hover:bg-red-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+                className="inline-flex items-center justify-center w-7 h-7 xl:w-8 xl:h-8 text-red-600 hover:bg-red-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
                 title="Supprimer le produit"
               >
                 {isDeleting ? (
-                  <div className="animate-spin w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full" />
+                  <div className="animate-spin w-3 h-3 xl:w-4 xl:h-4 border-2 border-red-600 border-t-transparent rounded-full" />
                 ) : (
                   <Trash2
-                    size={16}
-                    className="group-hover:scale-110 transition-transform"
+                    size={14}
+                    className="xl:w-4 xl:h-4 group-hover:scale-110 transition-transform"
                   />
                 )}
               </button>
               <Link
                 href={`/products/provisionning/${product.id}`}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white text-xs font-medium rounded-full transition-all duration-200 hover:scale-105 hover:shadow-md"
+                className="inline-flex items-center gap-1 px-2 xl:px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white text-xs font-medium rounded-full transition-all duration-200 hover:scale-105 hover:shadow-md"
                 title="Réapprovisionner"
               >
-                <ShoppingCart size={12} />
-                Achat
+                <ShoppingCart size={10} className="xl:w-3 xl:h-3" />
+                <span className="hidden xl:inline">Achat</span>
               </Link>
             </>
           )}
@@ -322,132 +333,247 @@ export default function DataProduct() {
       </div>
     );
   };
-  // Composant de pagination
+
+  // Composant carte produit pour mobile et tablette
+  const ProductCard = ({ product }: { product: productItems }) => {
+    const isDeleting = deletingProducts.has(product.id);
+    const isLowStock = product.stock < 10;
+
+    return (
+      <div className="lg:hidden bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200">
+        <div className="flex justify-between items-start mb-3">
+          <div className="flex-1 pr-3">
+            <h3 className="font-semibold text-gray-900 text-base leading-tight mb-1">
+              {product.name}
+            </h3>
+            {product.description && (
+              <p className="text-gray-600 text-sm line-clamp-2">
+                {product.description}
+              </p>
+            )}
+          </div>
+          <div className="flex-shrink-0">
+            <span
+              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                isLowStock
+                  ? "bg-red-100 text-red-800 border border-red-200"
+                  : "bg-green-100 text-green-800 border border-green-200"
+              }`}
+            >
+              {product.stock}
+              {isLowStock && <AlertCircle size={14} className="ml-1" />}
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-xs text-gray-500 mb-1">Prix d&apos;achat</p>
+            <p className="font-semibold text-gray-900">
+              {product.purchasePrice.toLocaleString()} Fcfa
+            </p>
+          </div>
+          <div className="bg-green-50 rounded-lg p-3">
+            <p className="text-xs text-gray-500 mb-1">Prix de vente</p>
+            <p className="font-semibold text-green-700">
+              {product.price.toLocaleString()} Fcfa
+            </p>
+          </div>
+        </div>
+
+        {user?.role === "MANAGER" && (
+          <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+            <Link
+              href={`/products/add?id=${product.id}`}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200 text-sm font-medium"
+            >
+              <Edit size={16} />
+              Modifier
+            </Link>
+            <button
+              onClick={() => handleDeleteProduct(product.id)}
+              disabled={isDeleting}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+            >
+              {isDeleting ? (
+                <div className="animate-spin w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full" />
+              ) : (
+                <Trash2 size={16} />
+              )}
+              {isDeleting ? "..." : "Supprimer"}
+            </button>
+            <Link
+              href={`/products/provisionning/${product.id}`}
+              className="inline-flex items-center justify-center gap-2 px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-all duration-200 text-sm font-medium"
+            >
+              <ShoppingCart size={16} />
+              Achat
+            </Link>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Composant de pagination responsive
   const Pagination = () => (
-    <div className="flex justify-between items-center px-6 py-4 bg-white border-t border-gray-200">
-      <div className="text-sm text-gray-600">
+    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-4 lg:px-6 py-4 bg-white border-t border-gray-200">
+      <div className="text-sm text-gray-600 text-center sm:text-left">
         {products.length > 0 && (
           <>
-            Affichage de{" "}
+            <span className="hidden sm:inline">Affichage de </span>
             <span className="font-semibold">
               {(currentPage - 1) * PRODUCTS_PER_PAGE + 1}
-            </span>{" "}
-            à{" "}
+            </span>
+            <span className="hidden sm:inline"> à </span>
+            <span className="sm:hidden">-</span>
             <span className="font-semibold">
               {Math.min(currentPage * PRODUCTS_PER_PAGE, products.length)}
-            </span>{" "}
-            sur <span className="font-semibold">{products.length}</span>{" "}
-            produits
+            </span>
+            <span className="hidden sm:inline"> sur </span>
+            <span className="sm:hidden">/</span>
+            <span className="font-semibold">{products.length}</span>
+            <span className="hidden sm:inline"> produits</span>
           </>
         )}
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-orange-50 hover:border-orange-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-orange-50 hover:border-orange-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
         >
-          Précédent
+          <span className="hidden sm:inline">Précédent</span>
+          <span className="sm:hidden">Préc.</span>
         </button>
 
-        <span className="inline-flex items-center px-4 py-2 text-sm font-semibold text-orange-700 bg-orange-50 border border-orange-200 rounded-lg">
-          Page {currentPage} sur {totalPages}
+        <span className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-orange-700 bg-orange-50 border border-orange-200 rounded-lg">
+          <span className="hidden sm:inline">
+            Page {currentPage} sur {totalPages}
+          </span>
+          <span className="sm:hidden">
+            {currentPage}/{totalPages}
+          </span>
         </span>
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-orange-600 border border-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-orange-600 border border-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
         >
-          Suivant
+          <span className="hidden sm:inline">Suivant</span>
+          <span className="sm:hidden">Suiv.</span>
         </button>
       </div>
     </div>
   );
+
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-6 space-y-6 bg-gray-50 min-h-screen">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 lg:py-6 space-y-4 lg:space-y-6 bg-gray-50 min-h-screen">
       {/* En-tête avec recherche et actions */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-        <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
+      <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-200 p-4 lg:p-6">
+        <div className="space-y-4">
+          {/* Titre et icône */}
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
-              <Package className="text-white" size={32} />
+            <div className="p-2 lg:p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg lg:rounded-xl shadow-lg">
+              <Package className="text-white" size={24} />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg lg:text-xl font-bold text-gray-900 truncate">
                 Gestion des produits
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-600 text-sm lg:text-base hidden sm:block">
                 Gérez votre inventaire et suivez vos stocks
               </p>
             </div>
+            {/* Menu burger pour mobile */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-            <div className="relative flex-1 lg:w-80">
+
+          {/* Barre de recherche et actions */}
+          <div
+            className={`space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 ${
+              isMobileMenuOpen ? "block" : "hidden lg:flex"
+            }`}
+          >
+            {/* Champ de recherche */}
+            <div className="relative flex-1 lg:max-w-md">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Rechercher un produit..."
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                className="w-full pl-10 pr-4 py-2.5 lg:py-3 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm lg:text-base"
               />
               <Search
-                size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
+                className="lg:w-5 lg:h-5 absolute left-3 lg:left-4 top-1/2 -translate-y-1/2 text-gray-400"
               />
             </div>
+
+            {/* Bouton Catégories */}
             <div className="flex gap-3">
               <Button
                 label="Catégories"
-                className="bg-green-600 hover:bg-green-700 text-white border-0 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:scale-105"
+                className="flex-1 lg:flex-none bg-green-600 hover:bg-green-700 text-white border-0 px-4 lg:px-6 py-2.5 lg:py-3 rounded-lg lg:rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:scale-105 text-sm lg:text-base"
                 onClick={navigateToCategories}
               />
             </div>
           </div>
         </div>
       </div>
-      {/* Tableau des produits */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+
+      {/* Contenu principal */}
+      <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        {/* En-tête du tableau (desktop uniquement) */}
         <TableHeader />
+
         {isLoading ? (
-          <div className="p-12">
+          <div className="p-8 lg:p-12">
             <Loader message="Chargement des produits..." />
           </div>
         ) : error ? (
-          <div className="p-12 text-center">
+          <div className="p-8 lg:p-12 text-center">
             <div className="flex flex-col items-center gap-4">
-              <div className="p-4 bg-red-100 rounded-full">
-                <AlertCircle className="text-red-500" size={48} />
+              <div className="p-3 lg:p-4 bg-red-100 rounded-full">
+                <AlertCircle className="text-red-500" size={32} />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-2">
                   Erreur de chargement
                 </h3>
-                <p className="text-red-600 mb-4">{error}</p>
+                <p className="text-red-600 mb-4 text-sm lg:text-base px-4">
+                  {error}
+                </p>
               </div>
               <button
                 onClick={() =>
                   fetchProducts({ page: currentPage, limit: PRODUCTS_PER_PAGE })
                 }
-                className="px-6 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+                className="px-4 lg:px-6 py-2.5 lg:py-3 bg-orange-600 text-white rounded-lg lg:rounded-xl hover:bg-orange-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-sm lg:text-base"
               >
                 Réessayer
               </button>
             </div>
           </div>
         ) : products.length === 0 ? (
-          <div className="p-12 text-center">
+          <div className="p-8 lg:p-12 text-center">
             <div className="flex flex-col items-center gap-4">
-              <div className="p-4 bg-gray-100 rounded-full">
-                <Package className="text-gray-400" size={48} />
+              <div className="p-3 lg:p-4 bg-gray-100 rounded-full">
+                <Package className="text-gray-400" size={32} />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-2">
                   {searchTerm
                     ? "Aucun résultat trouvé"
                     : "Aucun produit disponible"}
                 </h3>
-                <p className="text-gray-500 mb-4">
+                <p className="text-gray-500 mb-4 text-sm lg:text-base px-4">
                   {searchTerm
                     ? `Aucun produit ne correspond à "${searchTerm}"`
                     : "Commencez par ajouter des produits à votre inventaire"}
@@ -456,20 +582,30 @@ export default function DataProduct() {
               {!searchTerm && (
                 <button
                   onClick={navigateToAddProduct}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center gap-2 px-4 lg:px-6 py-2.5 lg:py-3 bg-green-600 text-white rounded-lg lg:rounded-xl hover:bg-green-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-sm lg:text-base"
                 >
-                  <Plus size={18} />
+                  <Plus size={16} className="lg:w-5 lg:h-5" />
                   Ajouter votre premier produit
                 </button>
               )}
             </div>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
-            {products.map((product) => (
-              <ProductRow key={product.id} product={product} />
-            ))}
-          </div>
+          <>
+            {/* Vue desktop (tableau) */}
+            <div className="hidden lg:block divide-y divide-gray-100">
+              {products.map((product) => (
+                <ProductRow key={product.id} product={product} />
+              ))}
+            </div>
+
+            {/* Vue mobile/tablette (cartes) */}
+            <div className="lg:hidden p-4 space-y-4">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </>
         )}
 
         {products.length > 0 && <Pagination />}

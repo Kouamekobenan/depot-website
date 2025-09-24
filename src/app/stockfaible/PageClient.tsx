@@ -20,6 +20,7 @@ export default function LowStockProductsPage() {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const { user } = useAuth();
   const tenantId = user?.tenantId;
 
@@ -197,8 +198,8 @@ export default function LowStockProductsPage() {
     };
 
     return (
-      <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
-        <div className="flex items-center text-sm text-gray-700">
+      <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200 space-y-3 sm:space-y-0">
+        <div className="flex items-center text-sm text-gray-700 order-2 sm:order-1">
           <span className="font-medium">
             {Math.min((page - 1) * limit + 1, total)} -{" "}
             {Math.min(page * limit, total)}
@@ -208,42 +209,52 @@ export default function LowStockProductsPage() {
           <span className="ml-2 text-gray-500">résultats</span>
         </div>
 
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-1 order-1 sm:order-2">
           <button
             onClick={() => handlePageChange(page - 1)}
             disabled={page === 1 || loading}
-            className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
+            className="px-2 sm:px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
           >
-            Précédent
+            <span className="hidden sm:inline">Précédent</span>
+            <span className="sm:hidden">‹</span>
           </button>
 
-          {getPageNumbers().map((pageNum, index) => (
-            <button
-              key={index}
-              onClick={() =>
-                typeof pageNum === "number"
-                  ? handlePageChange(pageNum)
-                  : undefined
-              }
-              disabled={loading || pageNum === "..."}
-              className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                pageNum === page
-                  ? "bg-blue-600 text-white border border-blue-600"
-                  : pageNum === "..."
-                  ? "text-gray-400 cursor-default"
-                  : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              {pageNum}
-            </button>
-          ))}
+          <div className="hidden sm:flex items-center space-x-1">
+            {getPageNumbers().map((pageNum, index) => (
+              <button
+                key={index}
+                onClick={() =>
+                  typeof pageNum === "number"
+                    ? handlePageChange(pageNum)
+                    : undefined
+                }
+                disabled={loading || pageNum === "..."}
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  pageNum === page
+                    ? "bg-blue-600 text-white border border-blue-600"
+                    : pageNum === "..."
+                    ? "text-gray-400 cursor-default"
+                    : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                {pageNum}
+              </button>
+            ))}
+          </div>
+
+          <div className="sm:hidden flex items-center space-x-2">
+            <span className="text-sm text-gray-600">
+              {page}/{totalPages}
+            </span>
+          </div>
 
           <button
             onClick={() => handlePageChange(page + 1)}
             disabled={page === totalPages || loading}
-            className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
+            className="px-2 sm:px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
           >
-            Suivant
+            <span className="hidden sm:inline">Suivant</span>
+            <span className="sm:hidden">›</span>
           </button>
         </div>
       </div>
@@ -254,20 +265,56 @@ export default function LowStockProductsPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar Navigation */}
-        <div className="fixed left-0 top-0 h-full z-10">
+        <div className="hidden lg:block fixed left-0 top-0 h-full z-10">
           <Navbar />
         </div>
 
+        {/* Mobile Navigation */}
+        <div className="lg:hidden">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-gray-200"
+          >
+            <svg
+              className="w-6 h-6 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+
+          {isMobileMenuOpen && (
+            <div
+              className="fixed inset-0 z-40 bg-black bg-opacity-50"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <div
+                className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Navbar />
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Main Content */}
-        <div className="flex-1 ml-64">
+        <div className="flex-1 lg:ml-64">
           {/* Header Section */}
           <div className="bg-white shadow-sm">
-            <div className="px-8 py-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-orange-100 rounded-xl">
+            <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <div className="flex items-center space-x-3 sm:space-x-4 pt-12 lg:pt-0">
+                  <div className="p-2 sm:p-3 bg-orange-100 rounded-lg sm:rounded-xl">
                     <svg
-                      className="w-8 h-8 text-orange-600"
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -281,23 +328,23 @@ export default function LowStockProductsPage() {
                     </svg>
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                       Gestion des Stocks Critiques
                     </h1>
-                    <p className="mt-1 text-gray-600">
+                    <p className="mt-1 text-sm sm:text-base text-gray-600">
                       Surveillance des produits avec stock inférieur à{" "}
                       {stockThreshold} unités
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-xl px-6 py-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                  <div className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg sm:rounded-xl px-4 sm:px-6 py-3 sm:py-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-orange-600">
+                      <div className="text-xl sm:text-2xl font-bold text-orange-600">
                         {total}
                       </div>
-                      <div className="text-sm font-medium text-orange-600">
+                      <div className="text-xs sm:text-sm font-medium text-orange-600">
                         Produits en alerte
                       </div>
                     </div>
@@ -306,7 +353,7 @@ export default function LowStockProductsPage() {
                   <button
                     onClick={() => fetchLowStockProducts(page)}
                     disabled={loading}
-                    className="inline-flex items-center px-4 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+                    className="inline-flex items-center justify-center px-4 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
                   >
                     <svg
                       className={`w-4 h-4 mr-2 ${
@@ -331,14 +378,14 @@ export default function LowStockProductsPage() {
           </div>
 
           {/* Content Section */}
-          <div className="p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             {/* Error State */}
             {error && (
-              <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-6">
+              <div className="mb-6 bg-red-50 border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
                     <svg
-                      className="w-6 h-6 text-red-500"
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-red-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -351,11 +398,13 @@ export default function LowStockProductsPage() {
                       />
                     </svg>
                   </div>
-                  <div className="ml-4">
-                    <h3 className="text-red-800 font-semibold">
+                  <div className="ml-3 sm:ml-4">
+                    <h3 className="text-red-800 font-semibold text-sm sm:text-base">
                       Erreur de chargement
                     </h3>
-                    <p className="text-red-700 text-sm mt-1">{error}</p>
+                    <p className="text-red-700 text-xs sm:text-sm mt-1">
+                      {error}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -363,10 +412,10 @@ export default function LowStockProductsPage() {
 
             {/* Loading State */}
             {loading && !error && (
-              <div className="text-center py-16">
-                <div className="inline-flex items-center px-6 py-3 bg-white rounded-lg shadow-sm border">
+              <div className="text-center py-12 sm:py-16">
+                <div className="inline-flex items-center px-4 sm:px-6 py-3 bg-white rounded-lg shadow-sm border">
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600"
+                    className="animate-spin -ml-1 mr-3 h-4 w-4 sm:h-5 sm:w-5 text-blue-600"
                     fill="none"
                     viewBox="0 0 24 24"
                   >
@@ -384,7 +433,7 @@ export default function LowStockProductsPage() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  <span className="text-gray-700 font-medium">
+                  <span className="text-gray-700 font-medium text-sm sm:text-base">
                     Chargement des produits...
                   </span>
                 </div>
@@ -395,9 +444,9 @@ export default function LowStockProductsPage() {
             {!loading && !error && (
               <>
                 {products.length > 0 ? (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    {/* Table Header */}
-                    <div className="bg-gray-50 px-6 py-4">
+                  <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    {/* Desktop Table Header */}
+                    <div className="hidden lg:block bg-gray-50 px-6 py-4">
                       <div className="grid grid-cols-6 gap-6">
                         <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Produit
@@ -434,9 +483,10 @@ export default function LowStockProductsPage() {
                         return (
                           <div
                             key={product.id}
-                            className="px-6 py-5 hover:bg-gray-50 transition-colors duration-150"
+                            className="px-4 sm:px-6 py-4 sm:py-5 hover:bg-gray-50 transition-colors duration-150"
                           >
-                            <div className="grid grid-cols-6 gap-6 items-center">
+                            {/* Desktop Layout */}
+                            <div className="hidden lg:grid grid-cols-6 gap-6 items-center">
                               {/* Nom du produit */}
                               <div>
                                 <h3 className="text-sm font-semibold text-gray-900 mb-1">
@@ -500,6 +550,68 @@ export default function LowStockProductsPage() {
                                 </div>
                               </div>
                             </div>
+
+                            {/* Mobile/Tablet Layout */}
+                            <div className="lg:hidden space-y-3">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <h3 className="text-base font-semibold text-gray-900 mb-1">
+                                    {product.name}
+                                  </h3>
+                                  <p className="text-xs text-gray-500 mb-2">
+                                    Réf: {product.id.slice(-8)}...
+                                  </p>
+                                  {product.description && (
+                                    <p className="text-sm text-gray-600 line-clamp-2">
+                                      {product.description}
+                                    </p>
+                                  )}
+                                </div>
+                                <StockAlert stock={product.stock} />
+                              </div>
+
+                              <div className="grid grid-cols-3 gap-4 pt-3 border-t border-gray-100">
+                                <div className="text-center">
+                                  <div className="text-xs text-gray-500 mb-1">
+                                    Prix d&apos;achat
+                                  </div>
+                                  <div className="text-sm font-semibold text-gray-700">
+                                    {formatPrice(product.purchasePrice)}
+                                  </div>
+                                </div>
+                                <div className="text-center">
+                                  <div className="text-xs text-gray-500 mb-1">
+                                    Prix de vente
+                                  </div>
+                                  <div className="text-sm font-bold text-gray-900">
+                                    {formatPrice(product.price)}
+                                  </div>
+                                </div>
+                                <div className="text-center">
+                                  <div className="text-xs text-gray-500 mb-1">
+                                    Marge
+                                  </div>
+                                  <div
+                                    className={`text-sm font-bold ${
+                                      margin >= 0
+                                        ? "text-green-600"
+                                        : "text-red-600"
+                                    }`}
+                                  >
+                                    {formatPrice(margin)}
+                                  </div>
+                                  <div
+                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 ${
+                                      parseFloat(marginPercentage) >= 0
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-red-100 text-red-700"
+                                    }`}
+                                  >
+                                    {marginPercentage}%
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         );
                       })}
@@ -510,10 +622,10 @@ export default function LowStockProductsPage() {
                   </div>
                 ) : (
                   // Empty State
-                  <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                  <div className="text-center py-12 sm:py-16 bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200">
+                    <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
                       <svg
-                        className="w-8 h-8 text-green-600"
+                        className="w-6 h-6 sm:w-8 sm:h-8 text-green-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -526,10 +638,10 @@ export default function LowStockProductsPage() {
                         />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                       Aucun produit en stock critique
                     </h3>
-                    <p className="text-gray-600 max-w-md mx-auto">
+                    <p className="text-sm sm:text-base text-gray-600 max-w-md mx-auto px-4">
                       Excellent ! Tous vos produits ont un stock supérieur à{" "}
                       {stockThreshold} unités. Votre inventaire est bien géré.
                     </p>

@@ -370,12 +370,21 @@ export default function Dashboard() {
         .text-shadow-sm {
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
+
+        /* Hide scrollbar but keep functionality */
+        .hide-scrollbar {
+          -ms-overflow-style: none; /* Internet Explorer 10+ */
+          scrollbar-width: none; /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none; /* Safari and Chrome */
+        }
       `}</style>
 
-      <div className="p-8 space-y-8">
-        {/* Enhanced Header */}
+      <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+        {/* Enhanced Responsive Header */}
         <div className="relative">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-200/60 p-8 relative overflow-hidden">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-[0.02]">
               <div
@@ -386,30 +395,34 @@ export default function Dashboard() {
               />
             </div>
 
-            <div className="relative flex items-center justify-between">
-              <div className="flex items-center space-x-6">
-                <div className="relative">
-                  <div className="p-4 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-600 rounded-2xl shadow-lg shadow-blue-200/40">
-                    <Package className="h-8 w-8 text-white" />
+            <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
+              <div className="flex items-center space-x-3 sm:space-x-4 lg:space-x-6">
+                <div className="relative flex-shrink-0">
+                  <div className="p-2.5 sm:p-3 lg:p-4 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-600 rounded-xl sm:rounded-2xl shadow-lg shadow-orange-200/40">
+                    <Package className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white shadow-sm" />
+                  <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-3 h-3 sm:w-4 sm:h-4 bg-emerald-500 rounded-full border-2 border-white shadow-sm" />
                 </div>
-                <div className="space-y-2">
-                  <h1 className="text-4xl font-bold text-slate-900 tracking-tight text-shadow-sm">
+                <div className="space-y-1 sm:space-y-2 min-w-0">
+                  <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-slate-900 tracking-tight text-shadow-sm">
                     Dashboard Produits
                   </h1>
-                  <p className="text-slate-600 text-lg font-medium">
+                  <p className="text-xs sm:text-sm lg:text-lg text-slate-600 font-medium">
                     Vue d&apos;ensemble de vos produits et statistiques avancées
                   </p>
                 </div>
               </div>
-              <div className="flex-shrink-0">
+
+              <div className="flex-shrink-0 w-full sm:w-auto">
                 <Link href="/dashbord">
-                  <button className="group cursor-pointer relative inline-flex items-center px-6 py-3.5 bg-gradient-to-r from-slate-600 via-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/50 active:scale-95">
-                    <div className="absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <ArrowLeft className="w-5 h-5 mr-3 group-hover:-translate-x-1 transition-transform duration-300" />
-                    <span className="relative text-sm tracking-wide">
-                      Retour au dashboard
+                  <button className="group cursor-pointer relative inline-flex items-center justify-center w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 lg:px-6 lg:py-3.5 bg-gradient-to-r from-slate-600 via-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/50 active:scale-95">
+                    <div className="absolute inset-0 bg-white/10 rounded-lg sm:rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 group-hover:-translate-x-1 transition-transform duration-300" />
+                    <span className="relative text-xs sm:text-sm tracking-wide">
+                      <span className="hidden sm:inline">
+                        Retour au dashboard
+                      </span>
+                      <span className="sm:hidden">Retour</span>
                     </span>
                   </button>
                 </Link>
@@ -417,21 +430,22 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        {/* Enhanced Alert for Low Stock */}
+
+        {/* Enhanced Alert for Low Stock - Responsive */}
         {stats.lowStockCount > 0 && (
-          <div className="relative bg-gradient-to-r from-orange-50 via-orange-50 to-red-50 rounded-2xl border border-orange-200/60 p-6 shadow-sm overflow-hidden">
+          <div className="relative bg-gradient-to-r from-orange-50 via-orange-50 to-red-50 rounded-xl sm:rounded-2xl border border-orange-200/60 p-4 sm:p-6 shadow-sm overflow-hidden">
             {/* Animated background */}
             <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-red-500/5 animate-pulse" />
-            <div className="relative flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="p-3 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl shadow-lg shadow-orange-200/50">
-                  <AlertTriangle className="h-6 w-6 text-white animate-pulse" />
+            <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-3 sm:space-y-0">
+              <div className="flex items-start sm:items-center space-x-3 sm:space-x-4">
+                <div className="flex-shrink-0 p-2.5 sm:p-3 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg sm:rounded-xl shadow-lg shadow-orange-200/50">
+                  <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-white animate-pulse" />
                 </div>
-                <div className="space-y-1">
-                  <h3 className="text-lg font-bold text-orange-800 tracking-tight">
+                <div className="space-y-0.5 sm:space-y-1 min-w-0">
+                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-orange-800 tracking-tight">
                     ⚠️ Attention - Stock critique
                   </h3>
-                  <p className="text-orange-700/90 font-medium">
+                  <p className="text-xs sm:text-sm lg:text-base text-orange-700/90 font-medium">
                     <span className="font-bold text-red-700">
                       {stats.lowStockCount}
                     </span>{" "}
@@ -444,11 +458,11 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 w-full sm:w-auto">
                 <Link href="/stockfaible">
-                  <button className="group inline-flex items-center px-5 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-200/50 hover:shadow-xl">
-                    <Zap className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                    <span className="text-sm tracking-wide">
+                  <button className="group inline-flex items-center justify-center w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-200/50 hover:shadow-xl">
+                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                    <span className="text-xs sm:text-sm tracking-wide">
                       Voir les stocks faibles
                     </span>
                   </button>
@@ -458,51 +472,52 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Enhanced Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        {/* Enhanced Responsive Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
           {statCards.map((card, index) => (
             <StatCard key={index} {...card} />
           ))}
 
-          {/* Enhanced Add Product Card */}
+          {/* Enhanced Add Product Card - Responsive */}
           <div className="sm:col-span-1">
             <AddProductCard />
           </div>
         </div>
 
-        {/* Additional Analytics Section */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-200/60 p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-2xl" />
+        {/* Additional Analytics Section - Responsive */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-2xl" />
 
           <div className="relative">
-            <div className="flex items-center mb-6">
-              <div className="p-3 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl mr-4 shadow-lg shadow-indigo-200/40">
-                <Activity className="h-6 w-6 text-white" />
+            <div className="flex items-center mb-4 sm:mb-6">
+              <div className="flex-shrink-0 p-2.5 sm:p-3 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg sm:rounded-xl mr-3 sm:mr-4 shadow-lg shadow-indigo-200/40">
+                <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <div>
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+              <div className="min-w-0">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
                   Aperçu analytique
                 </h2>
-                <p className="text-slate-600 font-medium">
+                <p className="text-sm sm:text-base text-slate-600 font-medium">
                   Métriques avancées de votre inventaire
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-6 border border-emerald-200/60">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-emerald-500/20 rounded-lg">
-                    <TrendingUp className="h-5 w-5 text-emerald-600" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {/* Marge moyenne */}
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-emerald-200/60">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="flex-shrink-0 p-1.5 sm:p-2 bg-emerald-500/20 rounded-lg">
+                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
                   </div>
-                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-200/50 px-2 py-1 rounded-full">
+                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-200/50 px-2 py-0.5 sm:py-1 rounded-full">
                     Excellent
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-emerald-800 mb-1">
+                <h3 className="text-xs sm:text-sm font-bold text-emerald-800 mb-1">
                   Marge moyenne
                 </h3>
-                <p className="text-2xl font-bold text-emerald-900 font-mono">
+                <p className="text-xl sm:text-2xl font-bold text-emerald-900 font-mono">
                   {stats.totalProducts > 0
                     ? Math.round(
                         (stats.totalProfit / stats.totalSalesValue) * 100
@@ -512,38 +527,40 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200/60">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-blue-500/20 rounded-lg">
-                    <Package className="h-5 w-5 text-blue-600" />
+              {/* Stock moyen/produit */}
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-blue-200/60">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="flex-shrink-0 p-1.5 sm:p-2 bg-blue-500/20 rounded-lg">
+                    <Package className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                   </div>
-                  <span className="text-xs font-semibold text-blue-700 bg-blue-200/50 px-2 py-1 rounded-full">
+                  <span className="text-xs font-semibold text-blue-700 bg-blue-200/50 px-2 py-0.5 sm:py-1 rounded-full">
                     Actif
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-blue-800 mb-1">
+                <h3 className="text-xs sm:text-sm font-bold text-blue-800 mb-1">
                   Stock moyen/produit
                 </h3>
-                <p className="text-2xl font-bold text-blue-900 font-mono">
+                <p className="text-xl sm:text-2xl font-bold text-blue-900 font-mono">
                   {stats.totalProducts > 0
                     ? Math.round(stats.totalStock / stats.totalProducts)
                     : 0}
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200/60">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-purple-500/20 rounded-lg">
-                    <Target className="h-5 w-5 text-purple-600" />
+              {/* Valeur moyenne/produit */}
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-purple-200/60 sm:col-span-2 lg:col-span-1">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="flex-shrink-0 p-1.5 sm:p-2 bg-purple-500/20 rounded-lg">
+                    <Target className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
                   </div>
-                  <span className="text-xs font-semibold text-purple-700 bg-purple-200/50 px-2 py-1 rounded-full">
+                  <span className="text-xs font-semibold text-purple-700 bg-purple-200/50 px-2 py-0.5 sm:py-1 rounded-full">
                     Suivi
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-purple-800 mb-1">
+                <h3 className="text-xs sm:text-sm font-bold text-purple-800 mb-1">
                   Valeur moyenne/produit
                 </h3>
-                <p className="text-2xl font-bold text-purple-900 font-mono">
+                <p className="text-xl sm:text-2xl font-bold text-purple-900 font-mono break-words">
                   {formatCurrency(
                     stats.totalProducts > 0
                       ? Math.round(stats.totalSalesValue / stats.totalProducts)

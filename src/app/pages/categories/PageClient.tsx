@@ -168,9 +168,9 @@ export default function PageCategorieClient() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       <Navbar />
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-3 sm:p-4 lg:p-6 max-w-full overflow-x-hidden">
         <div className="my-2">
           <Card
             title="Catégories des produits"
@@ -185,105 +185,147 @@ export default function PageCategorieClient() {
               setPage(1);
             }}
           />
+
+          {/* Formulaire d'ajout responsive */}
           {showForm && (
-            <aside className="flex gap-3 my-2 items-center">
+            <aside className="flex flex-col sm:flex-row gap-2 sm:gap-3 my-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <input
                 type="text"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
-                className="input text-xl"
+                className="input text-base sm:text-xl flex-1 min-w-0"
                 placeholder="Nom catégorie"
               />
-              <Button label="Enregistrer" onClick={handleAddCategory} />
-              <Button
-                label="Fermer"
-                className="bg-orange-400 hover:bg-orange-300"
-                onClick={() => setShowForm(false)}
-              />
+              <div className="flex gap-2 sm:gap-3">
+                <Button
+                  label="Enregistrer"
+                  onClick={handleAddCategory}
+                  className="flex-1 sm:flex-none"
+                />
+                <Button
+                  label="Fermer"
+                  className="bg-orange-400 hover:bg-orange-300 flex-1 sm:flex-none"
+                  onClick={() => setShowForm(false)}
+                />
+              </div>
             </aside>
           )}
+
+          {/* Formulaire d'édition responsive */}
           {editingCategory && (
-            <aside className="flex gap-3 my-2 items-center bg-yellow-100 p-2 rounded">
+            <aside className="flex flex-col sm:flex-row gap-2 sm:gap-3 my-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
               <input
                 type="text"
                 value={editCategoryName}
                 onChange={(e) => setEditCategoryName(e.target.value)}
-                className="input text-xl"
+                className="input text-base sm:text-xl flex-1 min-w-0"
                 placeholder="Modifier nom catégorie"
               />
-              <Button label="Modifier" onClick={handleUpdateCategory} />
-              <Button
-                label="Annuler"
-                className="bg-gray-400 hover:bg-gray-300"
-                onClick={() => {
-                  setEditingCategory(null);
-                  setEditCategoryName("");
-                }}
-              />
+              <div className="flex gap-2 sm:gap-3">
+                <Button
+                  label="Modifier"
+                  onClick={handleUpdateCategory}
+                  className="flex-1 sm:flex-none"
+                />
+                <Button
+                  label="Annuler"
+                  className="bg-gray-400 hover:bg-gray-300 flex-1 sm:flex-none"
+                  onClick={() => {
+                    setEditingCategory(null);
+                    setEditCategoryName("");
+                  }}
+                />
+              </div>
             </aside>
           )}
         </div>
+
+        {/* États de chargement et d'erreur */}
         {loading && <Loader message="Chargement des catégories..." />}
         {error && (
-          <p className="text-red-500 bg-red-100 dark:bg-orange-800 p-2 rounded-md mb-4">
+          <p className="text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 p-3 rounded-md mb-4 text-sm sm:text-base">
             {error}
           </p>
         )}
+
+        {/* Message état vide */}
         {!loading && !error && categories.length === 0 && (
-          <p>
-            {searchTerm
-              ? "Aucune catégorie trouvée pour cette recherche."
-              : "Aucune catégorie disponible."}
-          </p>
+          <div className="text-center py-8 sm:py-12">
+            <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+              {searchTerm
+                ? "Aucune catégorie trouvée pour cette recherche."
+                : "Aucune catégorie disponible."}
+            </p>
+          </div>
         )}
+
+        {/* Liste des catégories responsive */}
         {!loading && !error && categories.length > 0 && (
-          <ul className="space-y-2 mb-6">
+          <div className="space-y-2 sm:space-y-3 mb-6">
             {categories.map((cat, i) => (
-              <li
+              <div
                 key={cat.id}
-                className="p-3 flex justify-between bg-white dark:bg-gray-800 rounded-md shadow"
+                className="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 bg-white dark:bg-gray-800 rounded-md shadow-sm border border-gray-100 dark:border-gray-700"
               >
-                <aside className="flex gap-4">
-                  <span>{i + 1}</span>
-                  <span>{cat.name}</span>
-                </aside>
-                <aside className="flex gap-3">
-                  <Trash2
+                {/* Informations de la catégorie */}
+                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                  <span className="text-sm sm:text-base font-medium text-gray-500 dark:text-gray-400 flex-shrink-0">
+                    #{i + 1}
+                  </span>
+                  <span className="text-sm sm:text-base font-medium truncate">
+                    {cat.name}
+                  </span>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 sm:gap-3 justify-end sm:justify-start">
+                  <button
                     onClick={() => handleDeleteCategory(cat.id)}
-                    className="cursor-pointer hover:bg-green-300 hover:rounded-full hover:p-1 transition text-green-600"
-                  />
-                  <SquarePen
+                    className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 hover:rounded-full transition-all duration-200 text-red-600 dark:text-red-400"
+                    title="Supprimer"
+                  >
+                    <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                  <button
                     onClick={() => {
                       setEditingCategory(cat);
                       setEditCategoryName(cat.name);
                     }}
-                    className="cursor-pointer hover:bg-orange-300 hover:rounded-full hover:p-1 transition text-orange-600"
-                  />
-                </aside>
-              </li>
+                    className="p-2 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:rounded-full transition-all duration-200 text-orange-600 dark:text-orange-400"
+                    title="Modifier"
+                  >
+                    <SquarePen className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
 
-        <div className="flex justify-between items-center mt-4">
-          <button
-            onClick={() => setPage((p) => Math.max(p - 1, 1))}
-            disabled={page === 1}
-            className="px-4 py-2 bg-orange-600 text-white rounded disabled:opacity-50"
-          >
-            Précédent
-          </button>
-          <span className="text-sm">
-            Page {page} / {totalPage}
-          </span>
-          <button
-            onClick={() => setPage((p) => (p < totalPage ? p + 1 : p))}
-            disabled={page === totalPage}
-            className="px-4 py-2 bg-orange-600 text-white rounded disabled:opacity-50"
-          >
-            Suivant
-          </button>
-        </div>
+        {/* Pagination responsive */}
+        {!loading && !error && categories.length > 0 && (
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 mt-6 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+            <button
+              onClick={() => setPage((p) => Math.max(p - 1, 1))}
+              disabled={page === 1}
+              className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-700 transition-colors text-sm sm:text-base"
+            >
+              Précédent
+            </button>
+
+            <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
+              Page {page} sur {totalPage}
+            </span>
+
+            <button
+              onClick={() => setPage((p) => (p < totalPage ? p + 1 : p))}
+              disabled={page === totalPage}
+              className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-700 transition-colors text-sm sm:text-base"
+            >
+              Suivant
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
