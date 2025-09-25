@@ -381,10 +381,10 @@ export default function Dashboard() {
         }
       `}</style>
 
-      <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+      <div className="p-4 sm:p-3 lg:p-8 space-y-4 sm:space-y-3 lg:space-y-8">
         {/* Enhanced Responsive Header */}
         <div className="relative">
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-3 lg:p-8 relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-[0.02]">
               <div
@@ -415,7 +415,7 @@ export default function Dashboard() {
 
               <div className="flex-shrink-0 w-full sm:w-auto">
                 <Link href="/dashbord">
-                  <button className="group cursor-pointer relative inline-flex items-center justify-center w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 lg:px-6 lg:py-3.5 bg-gradient-to-r from-slate-600 via-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/50 active:scale-95">
+                  <button className="group cursor-pointer relative inline-flex items-center justify-center w-full sm:w-auto px-4 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-3.5 bg-gradient-to-r from-slate-600 via-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/50 active:scale-95">
                     <div className="absolute inset-0 bg-white/10 rounded-lg sm:rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 group-hover:-translate-x-1 transition-transform duration-300" />
                     <span className="relative text-xs sm:text-sm tracking-wide">
@@ -485,7 +485,7 @@ export default function Dashboard() {
         </div>
 
         {/* Additional Analytics Section - Responsive */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-4 sm:p-3 lg:p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-2xl" />
 
           <div className="relative">
@@ -505,7 +505,7 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {/* Marge moyenne */}
-              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-emerald-200/60">
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg sm:rounded-xl p-4 sm:p-3 border border-emerald-200/60">
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
                   <div className="flex-shrink-0 p-1.5 sm:p-2 bg-emerald-500/20 rounded-lg">
                     <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
@@ -528,7 +528,7 @@ export default function Dashboard() {
               </div>
 
               {/* Stock moyen/produit */}
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-blue-200/60">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg sm:rounded-xl p-4 sm:p-3 border border-blue-200/60">
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
                   <div className="flex-shrink-0 p-1.5 sm:p-2 bg-blue-500/20 rounded-lg">
                     <Package className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
@@ -548,7 +548,7 @@ export default function Dashboard() {
               </div>
 
               {/* Valeur moyenne/produit */}
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-purple-200/60 sm:col-span-2 lg:col-span-1">
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg sm:rounded-xl p-4 sm:p-3 border border-purple-200/60 sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
                   <div className="flex-shrink-0 p-1.5 sm:p-2 bg-purple-500/20 rounded-lg">
                     <Target className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />

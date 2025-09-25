@@ -85,18 +85,6 @@ const StatCard: React.FC<StatCardProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Barre de progression subtile */}
-      {/* <div className="mt-4 h-1 bg-slate-100 rounded-full overflow-hidden">
-        <div
-          className={`h-full ${bgColor} transition-all duration-500 ease-out`}
-          style={{
-            width: loading
-              ? "0%"
-              : `${Math.min((value / Math.max(stats.total, 1)) * 100, 100)}%`,
-          }}
-        />
-      </div> */}
     </div>
 
     {/* Effet de brillance au hover */}

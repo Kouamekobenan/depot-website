@@ -564,7 +564,7 @@ const CreateOrderComponent = () => {
 
         <div className="p-2 bg-purple-50 border border-purple-200 rounded text-center">
           <p className="text-xs text-purple-800">
-            <strong>💰 Profit:</strong> {item.totalProfit.toFixed(0)} F
+            <strong>Profit:</strong> {item.totalProfit.toFixed(0)} F
           </p>
         </div>
       </div>
@@ -700,10 +700,6 @@ const CreateOrderComponent = () => {
       {showCart && (
         <div className="lg:hidden fixed inset-0 z-50 overflow-y-auto">
           <div className="min-h-screen px-4 text-center">
-            <div
-              className="fixed inset-0 bg-black opacity-50"
-              onClick={() => setShowCart(false)}
-            ></div>
             <div className="inline-block align-bottom bg-white rounded-t-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle w-full max-h-[90vh] overflow-y-auto">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="flex justify-between items-center mb-4">

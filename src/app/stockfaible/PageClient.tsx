@@ -550,7 +550,6 @@ export default function LowStockProductsPage() {
                                 </div>
                               </div>
                             </div>
-
                             {/* Mobile/Tablet Layout */}
                             <div className="lg:hidden space-y-3">
                               <div className="flex items-start justify-between">

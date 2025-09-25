@@ -469,7 +469,7 @@ export default function DataProduct() {
   );
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 lg:py-6 space-y-4 lg:space-y-6 bg-gray-50 min-h-screen">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-3 lg:px-6 py-4 lg:py-6 space-y-4 lg:space-y-6 bg-gray-50 min-h-screen">
       {/* En-tête avec recherche et actions */}
       <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-200 p-4 lg:p-6">
         <div className="space-y-4">

@@ -24,7 +24,7 @@ const Customer: React.FC = () => {
         <Navbar />
       </div>
 
-      <div className="flex-1 p-6 lg:p-8">
+      <div className="flex-1 md:4 lg:p-8">
         <CustomerHeader totalCustomers={customers.length} loading={loading} />
 
         <div className="space-y-0">

@@ -446,7 +446,6 @@ export const LiveryPerson: React.FC<Intem> = ({ onClick }) => {
                       );
                     })}
                   </div>
-
                   <button
                     onClick={handleNext}
                     disabled={currentPage === totalPages}
@@ -461,7 +460,6 @@ export const LiveryPerson: React.FC<Intem> = ({ onClick }) => {
           )}
         </div>
       </div>
-
       {/* Side Panel for Bulk Actions */}
       {checkedItems.length > 0 && (
         <>
@@ -490,7 +488,6 @@ export const LiveryPerson: React.FC<Intem> = ({ onClick }) => {
                 <X className="h-5 w-5 text-gray-500" />
               </button>
             </div>
-
             {/* Panel Body */}
             <div className="flex-1 p-6 space-y-4">
               <Button
