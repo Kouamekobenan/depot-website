@@ -78,7 +78,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
       </p>
     </div>
   );
-
   // Rendu d'une ligne de commande
   const OrderRow: React.FC<{ order: OrderDto }> = ({ order }) => (
     <div className="p-3 sm:p-6 hover:bg-gray-50 transition-colors">
@@ -92,7 +91,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
             </p>
             <OrderStatusBadge status={order.status} />
           </div>
-
           {/* Détails de la commande */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
             {/* Prix */}
@@ -102,7 +100,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                 {formatPrice(order.totalPrice)}
               </span>
             </div>
-
             {/* Date */}
             {order.createdAt && (
               <div className="flex items-center">
@@ -110,7 +107,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                 <span className="truncate">{formatDate(order.createdAt)}</span>
               </div>
             )}
-
             {/* Nombre d'articles */}
             {order.orderItems && (
               <div className="flex items-center">
@@ -123,7 +119,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
             )}
           </div>
         </div>
-
         {/* Boutons d'action */}
         <div className="flex flex-col sm:flex-row gap-2 mt-2 lg:mt-0">
           {order.status === "PENDING" && (
@@ -133,7 +128,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
             >
               <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">Suivi</span>
-              <span className="sm:hidden">Suivi</span>
             </Link>
           )}
 
@@ -158,7 +152,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
       </div>
     </div>
   );
-
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 mx-2 sm:mx-0">
       {/* En-tête de la table */}

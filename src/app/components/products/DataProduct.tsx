@@ -195,6 +195,14 @@ export default function DataProduct() {
     }
   };
 
+  // Fonction pour naviguer vers la page d'achat (provisioning)
+  const handleNavigateToProvisioning = useCallback(
+    (productId: string) => {
+      router.push(`/products/provisionning/${productId}`);
+    },
+    [router]
+  );
+
   // Effet pour charger les produits
   useEffect(() => {
     const filters: ProductFilters = {
@@ -258,7 +266,6 @@ export default function DataProduct() {
   const ProductRow = ({ product }: { product: productItems }) => {
     const isDeleting = deletingProducts.has(product.id);
     const isLowStock = product.stock < 10;
-
     return (
       <div className="hidden lg:grid lg:grid-cols-6 items-center px-4 xl:px-6 py-4 bg-white border-b border-gray-100 hover:bg-orange-50/30 transition-all duration-200">
         <div
@@ -334,152 +341,139 @@ export default function DataProduct() {
     );
   };
 
-  // Composant carte produit pour mobile et tablette
+  // Composant carte produit pour mobile et tablette - CORRIGÉ
   const ProductCard = ({ product }: { product: productItems }) => {
     const isDeleting = deletingProducts.has(product.id);
     const isLowStock = product.stock < 10;
 
     return (
-      <div className="lg:hidden bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200">
+      <div className="lg:hidden bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 w-full max-w-full overflow-hidden">
         <div className="flex justify-between items-start mb-3">
-          <div className="flex-1 pr-3">
-            <h3 className="font-semibold text-gray-900 text-base leading-tight mb-1">
+          <div className="flex-1 min-w-0 pr-3">
+            <h3 className="font-semibold text-gray-900 text-base leading-tight mb-1 break-words">
               {product.name}
             </h3>
             {product.description && (
-              <p className="text-gray-600 text-sm line-clamp-2">
+              <p className="text-gray-600 text-sm line-clamp-2 break-words">
                 {product.description}
               </p>
             )}
           </div>
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 ml-2">
             <span
-              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                 isLowStock
                   ? "bg-red-100 text-red-800 border border-red-200"
                   : "bg-green-100 text-green-800 border border-green-200"
               }`}
             >
               {product.stock}
-              {isLowStock && <AlertCircle size={14} className="ml-1" />}
+              {isLowStock && <AlertCircle size={12} className="ml-1" />}
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="bg-gray-50 rounded-lg p-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="bg-gray-50 rounded-lg p-3 min-w-0">
             <p className="text-xs text-gray-500 mb-1">Prix d&apos;achat</p>
-            <p className="font-semibold text-gray-900">
+            <p className="font-semibold text-gray-900 text-sm break-all">
               {product.purchasePrice.toLocaleString()} Fcfa
             </p>
           </div>
-          <div className="bg-green-50 rounded-lg p-3">
+          <div className="bg-green-50 rounded-lg p-3 min-w-0">
             <p className="text-xs text-gray-500 mb-1">Prix de vente</p>
-            <p className="font-semibold text-green-700">
+            <p className="font-semibold text-green-700 text-sm break-all">
               {product.price.toLocaleString()} Fcfa
             </p>
           </div>
         </div>
 
         {user?.role === "MANAGER" && (
-          <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-3 border-t border-gray-100">
             <Link
               href={`/products/add?id=${product.id}`}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200 text-sm font-medium"
+              className="flex items-center justify-center gap-2 px-3 py-2.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200 text-sm font-medium min-h-[40px]"
             >
               <Edit size={16} />
-              Modifier
+              <span>Modifier</span>
             </Link>
             <button
               onClick={() => handleDeleteProduct(product.id)}
               disabled={isDeleting}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+              className="flex items-center justify-center gap-2 px-3 py-2.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium min-h-[40px]"
             >
               {isDeleting ? (
                 <div className="animate-spin w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full" />
               ) : (
                 <Trash2 size={16} />
               )}
-              {isDeleting ? "..." : "Supprimer"}
+              <span>{isDeleting ? "Suppression..." : "Supprimer"}</span>
             </button>
-            <Link
-              href={`/products/provisionning/${product.id}`}
-              className="inline-flex items-center justify-center gap-2 px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-all duration-200 text-sm font-medium"
+            <button
+              onClick={() => handleNavigateToProvisioning(product.id)}
+              className="flex items-center justify-center gap-2 px-3 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-all duration-200 text-sm font-medium min-h-[40px] active:scale-95"
             >
               <ShoppingCart size={16} />
-              Achat
-            </Link>
+              <span>Achat</span>
+            </button>
           </div>
         )}
       </div>
     );
   };
 
-  // Composant de pagination responsive
+  // Composant de pagination responsive - AMÉLIORÉ
   const Pagination = () => (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-4 lg:px-6 py-4 bg-white border-t border-gray-200">
       <div className="text-sm text-gray-600 text-center sm:text-left">
         {products.length > 0 && (
-          <>
-            <span className="hidden sm:inline">Affichage de </span>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
             <span className="font-semibold">
-              {(currentPage - 1) * PRODUCTS_PER_PAGE + 1}
-            </span>
-            <span className="hidden sm:inline"> à </span>
-            <span className="sm:hidden">-</span>
-            <span className="font-semibold">
+              {(currentPage - 1) * PRODUCTS_PER_PAGE + 1} -{" "}
               {Math.min(currentPage * PRODUCTS_PER_PAGE, products.length)}
             </span>
-            <span className="hidden sm:inline"> sur </span>
+            <span className="hidden sm:inline">sur</span>
             <span className="sm:hidden">/</span>
-            <span className="font-semibold">{products.length}</span>
-            <span className="hidden sm:inline"> produits</span>
-          </>
+            <span className="font-semibold">{products.length} produits</span>
+          </div>
         )}
       </div>
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-end">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-orange-50 hover:border-orange-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+          className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-orange-50 hover:border-orange-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 min-w-[80px]"
         >
-          <span className="hidden sm:inline">Précédent</span>
-          <span className="sm:hidden">Préc.</span>
+          Préc.
         </button>
 
-        <span className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-orange-700 bg-orange-50 border border-orange-200 rounded-lg">
-          <span className="hidden sm:inline">
-            Page {currentPage} sur {totalPages}
-          </span>
-          <span className="sm:hidden">
-            {currentPage}/{totalPages}
-          </span>
+        <span className="flex items-center justify-center px-3 py-2 text-sm font-semibold text-orange-700 bg-orange-50 border border-orange-200 rounded-lg min-w-[80px]">
+          {currentPage}/{totalPages}
         </span>
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-orange-600 border border-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+          className="flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-600 border border-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 min-w-[80px]"
         >
-          <span className="hidden sm:inline">Suivant</span>
-          <span className="sm:hidden">Suiv.</span>
+          Suiv.
         </button>
       </div>
     </div>
   );
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-3 sm:px-3 lg:px-6 py-4 lg:py-6 space-y-4 lg:space-y-6 bg-gray-50 min-h-screen">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 lg:py-6 space-y-4 lg:space-y-6 bg-gray-50 min-h-screen">
       {/* En-tête avec recherche et actions */}
       <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-200 p-4 lg:p-6">
         <div className="space-y-4">
           {/* Titre et icône */}
           <div className="flex items-center gap-3">
-            <div className="p-2 lg:p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg lg:rounded-xl shadow-lg">
+            <div className="p-2 lg:p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg lg:rounded-xl shadow-lg flex-shrink-0">
               <Package className="text-white" size={24} />
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-lg lg:text-xl font-bold text-gray-900 truncate">
+              <h1 className="text-lg lg:text-xl font-bold text-gray-900 break-words">
                 Gestion des produits
               </h1>
               <p className="text-gray-600 text-sm lg:text-base hidden sm:block">
@@ -489,7 +483,7 @@ export default function DataProduct() {
             {/* Menu burger pour mobile */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              className="lg:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -547,7 +541,7 @@ export default function DataProduct() {
                 <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-2">
                   Erreur de chargement
                 </h3>
-                <p className="text-red-600 mb-4 text-sm lg:text-base px-4">
+                <p className="text-red-600 mb-4 text-sm lg:text-base px-4 break-words">
                   {error}
                 </p>
               </div>
@@ -573,7 +567,7 @@ export default function DataProduct() {
                     ? "Aucun résultat trouvé"
                     : "Aucun produit disponible"}
                 </h3>
-                <p className="text-gray-500 mb-4 text-sm lg:text-base px-4">
+                <p className="text-gray-500 mb-4 text-sm lg:text-base px-4 break-words">
                   {searchTerm
                     ? `Aucun produit ne correspond à "${searchTerm}"`
                     : "Commencez par ajouter des produits à votre inventaire"}
@@ -599,8 +593,8 @@ export default function DataProduct() {
               ))}
             </div>
 
-            {/* Vue mobile/tablette (cartes) */}
-            <div className="lg:hidden p-4 space-y-4">
+            {/* Vue mobile/tablette (cartes) - CONTENEUR CORRIGÉ */}
+            <div className="lg:hidden p-3 sm:p-4 space-y-4 max-w-full overflow-hidden">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

@@ -6,7 +6,7 @@ import DataProduct from "../components/products/DataProduct";
 export default function page() {
   return (
     <div className="flex">
-      <div className="flex-1/2">
+      <div className="">
         <Dashbord />
         <DataProduct />
       </div>
