@@ -32,7 +32,6 @@ interface LoadingState {
 interface Intem {
   onClick?: () => void;
 }
-
 export const LiveryPerson: React.FC<Intem> = ({ onClick }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [checkedItems, setCheckedItems] = useState<string[]>([]);
@@ -51,7 +50,6 @@ export const LiveryPerson: React.FC<Intem> = ({ onClick }) => {
     error: null,
   });
   const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
-
   // Delete deliveryPerson
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
@@ -59,9 +57,7 @@ export const LiveryPerson: React.FC<Intem> = ({ onClick }) => {
     );
 
     if (!confirmDelete) return;
-
     setLoadingState((prev) => ({ ...prev, isLoading: true, error: null }));
-
     try {
       await api.delete(`/deliveryPerson/${id}`);
       setDeliveryPersons((prev) => prev.filter((person) => person.id !== id));
