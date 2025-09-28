@@ -4,6 +4,7 @@ import { Eye, EyeOff, Mail, Lock, LogIn } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Button from "../buttonConnecte/ButtonCont";
+import Link from "next/link";
 // Interface pour typer les données du formulaire
 interface FormData {
   email: string;
@@ -212,24 +213,18 @@ export default function Login() {
           {/* Pied de page */}
           <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              besoin d&apos;aide?{" "}
-              <button
-                type="button"
-                className="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 font-medium transition-colors"
-              >
-                Contactez votre administrateur
-              </button>
+              Vous avez pas un espace?{" "}
+              <Link href="/espace">
+                <button
+                  type="button"
+                  className="text-orange-600 bg-gray-100 p-1.5 rounded-md cursor-pointer hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 font-medium transition-colors"
+                >
+                  Créer votre site
+                </button>
+              </Link>
             </p>
           </div>
         </div>
-
-        {/* Indicateurs de sécurité */}
-        {/* <div className="mt-6 text-center">
-          <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-            Connexion sécurisée SSL
-          </p>
-        </div> */}
       </div>
     </div>
   );

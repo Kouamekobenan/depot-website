@@ -104,7 +104,6 @@ export interface deliveryDto {
   deliveryProducts: deliveryProducts[];
   totalPrice: number;
 }
-
 // Sales direct
 export interface directSaleItem {
   id: string;

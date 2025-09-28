@@ -5,7 +5,7 @@ import Login from "./users/Login";
 import Image from "next/image";
 
 export default function CountdownClient() {
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(5);
   const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
@@ -80,7 +80,6 @@ export default function CountdownClient() {
             style={{ width: `${((10 - countdown) / 10) * 100}%` }}
           ></div>
         </div>
-
         {/* Indicateur de statut */}
         <div className="flex items-center justify-center space-x-2 text-slate-600">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -89,7 +88,6 @@ export default function CountdownClient() {
           </span>
         </div>
       </div>
-
       {/* Footer subtil */}
       <div className="mt-8 text-center">
         <p className="text-slate-500 text-sm font-sans">
