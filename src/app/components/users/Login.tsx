@@ -211,18 +211,77 @@ export default function Login() {
           </div>
           {/* Séparateur */}
           {/* Pied de page */}
-          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Vous avez pas un espace?{" "}
-              <Link href="/espace">
-                <button
-                  type="button"
-                  className="text-orange-600 bg-gray-100 p-1.5 rounded-md cursor-pointer hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 font-medium transition-colors"
-                >
-                  Créer votre site
-                </button>
-              </Link>
-            </p>
+          <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <div className="text-center space-y-4">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">
+                Vous n&apos;avez pas encore d&apos;espace ?
+              </p>
+
+              <div className="flex justify-center">
+                <Link href="/espace" className="group">
+                  <button
+                    type="button"
+                    className="relative inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-3.5
+                   bg-gradient-to-r from-orange-500 to-orange-600 
+                   hover:from-orange-600 hover:to-orange-700 
+                   active:from-orange-700 active:to-orange-800
+                   text-white font-semibold text-sm sm:text-base
+                   rounded-xl shadow-lg hover:shadow-xl active:shadow-md
+                   transform hover:scale-105 active:scale-95
+                   transition-all duration-200 ease-out
+                   border border-orange-400/20
+                   focus:outline-none focus:ring-4 focus:ring-orange-500/30
+                   overflow-hidden"
+                  >
+                    {/* Effet de brillance animé */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent
+                        transform -skew-x-12 -translate-x-full
+                        group-hover:translate-x-full transition-transform duration-700"
+                    ></div>
+
+                    {/* Icône */}
+                    <svg
+                      className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 group-hover:rotate-12"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      />
+                    </svg>
+
+                    {/* Texte */}
+                    <span className="relative z-10 whitespace-nowrap">
+                      Créer votre site
+                    </span>
+
+                    {/* Particules d'effet au clic */}
+                    <div className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity duration-150">
+                      <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-white rounded-full animate-ping"></div>
+                      <div
+                        className="absolute top-1/3 right-1/4 w-1 h-1 bg-white rounded-full animate-ping"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="absolute bottom-1/3 left-1/3 w-1 h-1 bg-white rounded-full animate-ping"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                    </div>
+                  </button>
+                </Link>
+              </div>
+
+              {/* Texte d'accompagnement */}
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-500 max-w-xs mx-auto leading-relaxed">
+                Configurez votre espace en quelques minutes et commencez à gérer
+                votre activité
+              </p>
+            </div>
           </div>
         </div>
       </div>

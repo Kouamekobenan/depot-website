@@ -46,7 +46,6 @@ export default function CountdownClient() {
           Chargement en cours...
         </p>
       </div>
-
       {/* Card principale */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-10 max-w-md mx-auto">
         {/* Logo */}
@@ -62,7 +61,6 @@ export default function CountdownClient() {
             />
           </div>
         </div>
-
         {/* Countdown */}
         <div className="mb-6">
           <div className="text-7xl font-black text-transparent bg-gradient-to-b from-orange-500 to-orange-600 bg-clip-text mb-4 font-mono tracking-tight">

@@ -186,29 +186,29 @@ export default function DeliveryInvoiceClient({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header avec actions */}
-        <div className="mb-6 flex items-center justify-between print:hidden">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-6 lg:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header avec actions - Responsive */}
+        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 print:hidden">
           <button
             onClick={handleBack}
-            className="flex cursor-pointer items-center gap-2 bg-gray-600 p-2 rounded-md text-white transition-colors"
+            className="flex cursor-pointer items-center gap-2 bg-gray-600 p-2 sm:p-3 rounded-md text-white transition-colors hover:bg-gray-700 w-full sm:w-auto justify-center sm:justify-start"
           >
-            <ArrowLeft className="h-5 w-5" />
-            <span>Retour</span>
+            <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Retour</span>
           </button>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+              className="flex items-center justify-center gap-2 bg-orange-600 text-white px-4 py-2 sm:py-3 rounded-lg hover:bg-orange-700 transition-colors text-sm sm:text-base"
             >
               <Printer className="h-4 w-4" />
               Imprimer
             </button>
             <button
               onClick={handleDownload}
-              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+              className="flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 sm:py-3 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
             >
               <Download className="h-4 w-4" />
               Télécharger PDF
@@ -217,24 +217,24 @@ export default function DeliveryInvoiceClient({
         </div>
 
         {/* Facture */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* En-tête de la facture */}
-          <div className="bg-gradient-to-r from-orange-600 to-orange-700 print-header p-6 print:p-4">
-            <div className="flex justify-between items-start print:block">
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-lg overflow-hidden">
+          {/* En-tête de la facture - Responsive */}
+          <div className="bg-gradient-to-r from-orange-600 to-orange-700 print-header p-4 sm:p-6 print:p-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-0 print:block">
               <div className="print:mb-4">
-                <h1 className="text-3xl print-title print:text-lg font-bold mb-2">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl print-title print:text-lg font-bold mb-2">
                   FACTURE DE LIVRAISON
                 </h1>
-                <p className="text-orange-100 print:text-white print-small">
+                <p className="text-orange-100 print:text-white print-small text-sm sm:text-base">
                   Bon de livraison détaillé
                 </p>
               </div>
-              <div className="text-right print:text-left">
-                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 print:p-2 print:bg-white/30">
-                  <p className="text-sm text-orange-100 print:text-white print-small">
+              <div className="w-full sm:w-auto sm:text-right print:text-left">
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 print:p-2 print:bg-white/30">
+                  <p className="text-xs sm:text-sm text-orange-100 print:text-white print-small">
                     N° de facture
                   </p>
-                  <p className="text-xl print:text-base font-bold text-white">
+                  <p className="text-lg sm:text-xl print:text-base font-bold text-white break-all">
                     {delivery?.id}
                   </p>
                 </div>
@@ -242,19 +242,21 @@ export default function DeliveryInvoiceClient({
             </div>
           </div>
 
-          {/* Informations principales */}
-          <div className="p-6 print:p-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:gap-4 mb-6 print:mb-4">
+          {/* Informations principales - Responsive Grid */}
+          <div className="p-4 sm:p-6 print:p-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 print:gap-4 mb-4 sm:mb-6 print:mb-4">
               {/* Informations du livreur */}
-              <div className="bg-gray-50 print-bg-gray rounded-lg p-4 print-compact">
-                <h2 className="text-lg print:text-sm font-semibold mb-3 print:mb-2 flex items-center gap-2">
-                  <User className="h-5 w-5 print:h-4 print:w-4" />
+              <div className="bg-gray-50 print-bg-gray rounded-lg p-3 sm:p-4 print-compact">
+                <h2 className="text-base sm:text-lg print:text-sm font-semibold mb-2 sm:mb-3 print:mb-2 flex items-center gap-2">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 print:h-4 print:w-4" />
                   Informations du Livreur
                 </h2>
-                <div className="space-y-2 print:space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium print:text-xs">Nom:</span>
-                    <span className="text-gray-700 font-bold print:text-xs">
+                <div className="space-y-1 sm:space-y-2 print:space-y-1">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <span className="font-medium text-sm sm:text-base print:text-xs">
+                      Nom:
+                    </span>
+                    <span className="text-gray-700 font-bold text-sm sm:text-base print:text-xs break-words">
                       {delivery?.deliveryPerson.name}
                     </span>
                   </div>
@@ -262,25 +264,29 @@ export default function DeliveryInvoiceClient({
               </div>
 
               {/* Détails de la livraison */}
-              <div className="bg-gray-50 print-bg-gray rounded-lg p-4 print-compact">
-                <h2 className="text-lg print:text-sm font-semibold mb-3 print:mb-2 flex items-center gap-2">
-                  <Package className="h-5 w-5 print:h-4 print:w-4" />
+              <div className="bg-gray-50 print-bg-gray rounded-lg p-3 sm:p-4 print-compact">
+                <h2 className="text-base sm:text-lg print:text-sm font-semibold mb-2 sm:mb-3 print:mb-2 flex items-center gap-2">
+                  <Package className="h-4 w-4 sm:h-5 sm:w-5 print:h-4 print:w-4" />
                   Détails de la Livraison
                 </h2>
-                <div className="space-y-2 print:space-y-1">
+                <div className="space-y-1 sm:space-y-2 print:space-y-1">
                   {delivery?.createdAt && (
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 print:h-3 print:w-3 text-gray-400" />
-                      <span className="text-gray-700 print:text-xs">
-                        {formatDate(delivery.createdAt)}
-                      </span>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 print:h-3 print:w-3 text-gray-400" />
+                        <span className="text-gray-700 text-sm sm:text-base print:text-xs">
+                          {formatDate(delivery.createdAt)}
+                        </span>
+                      </div>
                     </div>
                   )}
                   {delivery?.status && (
-                    <div className="flex items-center gap-2 print:block">
-                      <span className="font-medium print:text-xs">Statut:</span>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 print:block">
+                      <span className="font-medium text-sm sm:text-base print:text-xs">
+                        Statut:
+                      </span>
                       <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium print:inline-block print:ml-2 ${
+                        className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium print:inline-block print:ml-2 ${
                           delivery.status === "IN_PROGRESS"
                             ? "bg-yellow-100 text-yellow-800 print-badge-yellow"
                             : delivery.status === "COMPLETED"
@@ -296,36 +302,37 @@ export default function DeliveryInvoiceClient({
               </div>
             </div>
 
-            {/* Tableau des produits */}
-            <div className="mb-6 print:mb-4">
-              <h2 className="text-xl print:text-sm font-semibold mb-4 print:mb-2 flex items-center gap-2">
-                <Package className="h-6 w-6 print:h-4 print:w-4 text-orange-600 print-text-orange" />
+            {/* Tableau des produits - Version Mobile et Desktop */}
+            <div className="mb-4 sm:mb-6 print:mb-4">
+              <h2 className="text-lg sm:text-xl print:text-sm font-semibold mb-3 sm:mb-4 print:mb-2 flex items-center gap-2">
+                <Package className="h-5 w-5 sm:h-6 sm:w-6 print:h-4 print:w-4 text-orange-600 print-text-orange" />
                 Détail des Produits
               </h2>
 
-              <div className="overflow-x-auto">
+              {/* Version Desktop - Table */}
+              <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full border-collapse print-table">
                   <thead>
                     <tr className="bg-gray-50">
-                      <th className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-left font-semibold print:text-xs">
+                      <th className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-left font-semibold text-xs sm:text-sm print:text-xs">
                         Code
                       </th>
-                      <th className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-left font-semibold print:text-xs">
+                      <th className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-left font-semibold text-xs sm:text-sm print:text-xs">
                         Produit
                       </th>
-                      <th className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-center font-semibold print:text-xs">
+                      <th className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-center font-semibold text-xs sm:text-sm print:text-xs">
                         Prix unitaire
                       </th>
-                      <th className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-center font-semibold print:text-xs">
+                      <th className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-center font-semibold text-xs sm:text-sm print:text-xs">
                         Qté prévue
                       </th>
-                      <th className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-center font-semibold print:text-xs">
+                      <th className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-center font-semibold text-xs sm:text-sm print:text-xs">
                         Qté livrée
                       </th>
-                      <th className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-center font-semibold print:text-xs">
+                      <th className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-center font-semibold text-xs sm:text-sm print:text-xs">
                         Qté retournée
                       </th>
-                      <th className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-right font-semibold print:text-xs">
+                      <th className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-right font-semibold text-xs sm:text-sm print:text-xs">
                         Total livré
                       </th>
                     </tr>
@@ -333,35 +340,35 @@ export default function DeliveryInvoiceClient({
                   <tbody>
                     {delivery?.deliveryProducts.map((item) => (
                       <tr key={item.id} className="hover:bg-gray-50">
-                        <td className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-sm print:text-xs text-gray-600">
+                        <td className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-xs sm:text-sm print:text-xs text-gray-600">
                           {item.id.slice(-8) || "-"}...
                         </td>
-                        <td className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 font-medium print:text-xs">
+                        <td className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 font-medium text-xs sm:text-sm print:text-xs">
                           {item.product.name}
                         </td>
-                        <td className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-center print:text-xs">
+                        <td className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-center text-xs sm:text-sm print:text-xs">
                           {formatCurrency(item.product.price)}
                         </td>
-                        <td className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-center print:text-xs">
+                        <td className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-center text-xs sm:text-sm print:text-xs">
                           {item.quantity}
                         </td>
-                        <td className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-center">
-                          <span className="bg-green-100 text-green-800 print-badge-green px-2 py-1 rounded-full text-sm font-medium print:text-xs">
+                        <td className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-center">
+                          <span className="bg-green-100 text-green-800 print-badge-green px-2 py-1 rounded-full text-xs font-medium">
                             {Number(item.deliveredQuantity)}
                           </span>
                         </td>
-                        <td className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-center">
+                        <td className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-center">
                           {item.returnedQuantity > 0 ? (
-                            <span className="bg-red-100 text-red-800 print-badge-red px-2 py-1 rounded-full text-sm font-medium print:text-xs">
+                            <span className="bg-red-100 text-red-800 print-badge-red px-2 py-1 rounded-full text-xs font-medium">
                               {item.returnedQuantity}
                             </span>
                           ) : (
-                            <span className="text-gray-400 print:text-xs">
+                            <span className="text-gray-400 text-xs print:text-xs">
                               0
                             </span>
                           )}
                         </td>
-                        <td className="border border-gray-200 print-border px-3 py-2 print:px-2 print:py-1 text-right font-semibold print:text-xs">
+                        <td className="border border-gray-200 print-border px-2 sm:px-3 py-2 print:px-2 print:py-1 text-right font-semibold text-xs sm:text-sm print:text-xs">
                           {formatCurrency(
                             item.deliveredQuantity * Number(item.product.price)
                           )}
@@ -371,35 +378,89 @@ export default function DeliveryInvoiceClient({
                   </tbody>
                 </table>
               </div>
+
+              {/* Version Mobile - Cards */}
+              <div className="lg:hidden space-y-3">
+                {delivery?.deliveryProducts.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-sm text-gray-900 truncate">
+                          {item.product.name}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Code: {item.id.slice(-8)}...
+                        </p>
+                      </div>
+                      <div className="text-right ml-3">
+                        <p className="font-semibold text-sm">
+                          {formatCurrency(item.product.price)}
+                        </p>
+                        <p className="text-xs text-gray-500">Prix unitaire</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div className="bg-gray-50 rounded p-2">
+                        <p className="text-gray-600">Qté prévue</p>
+                        <p className="font-semibold">{item.quantity}</p>
+                      </div>
+                      <div className="bg-green-50 rounded p-2">
+                        <p className="text-gray-600">Qté livrée</p>
+                        <p className="font-semibold text-green-800">
+                          {Number(item.deliveredQuantity)}
+                        </p>
+                      </div>
+                      <div className="bg-red-50 rounded p-2">
+                        <p className="text-gray-600">Qté retournée</p>
+                        <p className="font-semibold text-red-800">
+                          {item.returnedQuantity}
+                        </p>
+                      </div>
+                      <div className="bg-blue-50 rounded p-2">
+                        <p className="text-gray-600">Total livré</p>
+                        <p className="font-semibold text-blue-800">
+                          {formatCurrency(
+                            item.deliveredQuantity * Number(item.product.price)
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Totaux */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:gap-4 print:grid-cols-2">
+            {/* Totaux - Responsive Grid */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 print:gap-4 print:grid-cols-2">
               <div className="bg-blue-50 print-bg-blue rounded-lg p-4 print-compact">
-                <h3 className="text-lg print:text-sm font-semibold mb-3 print:mb-2 text-orange-800 print-text-orange">
+                <h3 className="text-base sm:text-lg print:text-sm font-semibold mb-3 print:mb-2 text-orange-800 print-text-orange">
                   Récapitulatif
                 </h3>
                 <div className="space-y-2 print:space-y-1">
-                  <div className="flex justify-between print:text-xs">
+                  <div className="flex justify-between text-sm sm:text-base print:text-xs">
                     <span className="text-gray-600">Total prévu:</span>
                     <span className="font-medium">
                       {formatCurrency(delivery?.totalPrice || 0)}
                     </span>
                   </div>
-                  <div className="flex justify-between print:text-xs">
+                  <div className="flex justify-between text-sm sm:text-base print:text-xs">
                     <span className="text-gray-600">Total livré:</span>
                     <span className="font-medium text-green-600 print-text-green">
                       {formatCurrency(calculateTotalDelivered())}
                     </span>
                   </div>
-                  <div className="flex justify-between print:text-xs">
+                  <div className="flex justify-between text-sm sm:text-base print:text-xs">
                     <span className="text-gray-600">Total retourné:</span>
                     <span className="font-medium text-red-600 print-text-red">
                       {formatCurrency(calculateTotalReturned())}
                     </span>
                   </div>
                   <div className="border-t pt-2 print:pt-1">
-                    <div className="flex justify-between text-lg print:text-sm font-bold">
+                    <div className="flex justify-between text-base sm:text-lg print:text-sm font-bold">
                       <span>Net à payer:</span>
                       <span className="text-blue-600 print-text-orange">
                         {formatCurrency(calculateTotalDelivered())}
@@ -410,17 +471,17 @@ export default function DeliveryInvoiceClient({
               </div>
 
               <div className="bg-gray-50 print-bg-gray rounded-lg p-4 print-compact">
-                <h3 className="text-lg print:text-sm font-semibold mb-3 print:mb-2">
+                <h3 className="text-base sm:text-lg print:text-sm font-semibold mb-3 print:mb-2">
                   Statistiques
                 </h3>
                 <div className="space-y-2 print:space-y-1">
-                  <div className="flex justify-between print:text-xs">
+                  <div className="flex justify-between text-sm sm:text-base print:text-xs">
                     <span className="text-gray-600">Produits différents:</span>
                     <span className="font-medium">
                       {delivery?.deliveryProducts.length || 0}
                     </span>
                   </div>
-                  <div className="flex justify-between print:text-xs">
+                  <div className="flex justify-between text-sm sm:text-base print:text-xs">
                     <span className="text-gray-600">
                       Unités totales prévues:
                     </span>
@@ -431,7 +492,7 @@ export default function DeliveryInvoiceClient({
                       ) || 0}
                     </span>
                   </div>
-                  <div className="flex justify-between print:text-xs">
+                  <div className="flex justify-between text-sm sm:text-base print:text-xs">
                     <span className="text-gray-600">Unités livrées:</span>
                     <span className="font-medium text-green-600 print-text-green">
                       {delivery?.deliveryProducts.reduce(
@@ -440,7 +501,7 @@ export default function DeliveryInvoiceClient({
                       ) || 0}
                     </span>
                   </div>
-                  <div className="flex justify-between print:text-xs">
+                  <div className="flex justify-between text-sm sm:text-base print:text-xs">
                     <span className="text-gray-600">Taux de livraison:</span>
                     <span className="font-medium">
                       {delivery
@@ -466,9 +527,9 @@ export default function DeliveryInvoiceClient({
           </div>
 
           {/* Pied de page */}
-          <div className="bg-gray-50 print-bg-gray px-6 py-4 print:px-4 print:py-2 border-t">
-            <div className="text-center text-gray-600 text-sm print:text-xs">
-              <p className="mb-2 print:mb-1">
+          <div className="bg-gray-50 print-bg-gray px-4 sm:px-6 py-3 sm:py-4 print:px-4 print:py-2 border-t">
+            <div className="text-center text-gray-600 text-xs sm:text-sm print:text-xs">
+              <p className="mb-1 sm:mb-2 print:mb-1">
                 Cette facture a été générée automatiquement le{" "}
                 {new Date().toLocaleDateString("fr-FR")}
               </p>

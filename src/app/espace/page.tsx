@@ -58,7 +58,6 @@ export default function CreateEspace(): React.JSX.Element | null {
   useEffect((): void => {
     setMounted(true);
   }, []);
-
   // Protection contre l'hydratation SSR
   if (!mounted) {
     return null;
@@ -70,14 +69,12 @@ export default function CreateEspace(): React.JSX.Element | null {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-
   // Gestionnaire de changement pour le nom du site
   const handleSiteNameChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     setSiteName(e.target.value);
   };
-
   // Validation du formulaire
   const validateForm = (): boolean => {
     if (!siteName.trim()) {
@@ -194,7 +191,6 @@ export default function CreateEspace(): React.JSX.Element | null {
             </p>
           </div>
         </div>
-
         <div className="p-6 md:p-8">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Section 1: Configuration du site */}
@@ -210,7 +206,6 @@ export default function CreateEspace(): React.JSX.Element | null {
                   Configuration du site
                 </h2>
               </div>
-
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
                 <div className="space-y-2">
                   <label
@@ -234,7 +229,6 @@ export default function CreateEspace(): React.JSX.Element | null {
                 </div>
               </div>
             </div>
-
             {/* Séparateur */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -260,7 +254,6 @@ export default function CreateEspace(): React.JSX.Element | null {
                   Compte administrateur
                 </h2>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Email */}
                 <div className="space-y-2">
@@ -282,7 +275,6 @@ export default function CreateEspace(): React.JSX.Element | null {
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
                   />
                 </div>
-
                 {/* Nom complet */}
                 <div className="space-y-2">
                   <label
@@ -324,7 +316,6 @@ export default function CreateEspace(): React.JSX.Element | null {
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
                   />
                 </div>
-
                 {/* Mot de passe */}
                 <div className="space-y-2">
                   <label
