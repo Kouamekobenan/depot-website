@@ -3,12 +3,8 @@ import {
   EllipsisVertical,
   LogOut,
   Bell,
-  Settings,
-  User,
-  Shield,
 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
-
 interface Items {
   title: string;
   name: string | null;
@@ -175,29 +171,6 @@ export const CardUser: React.FC<Items> = ({
 
   const themeStyles = getThemeStyles();
   const sizeStyles = getSizeStyles();
-
-  const getRoleIcon = () => {
-    switch (role) {
-      case "admin":
-        return <Shield className="w-3 h-3 text-red-400" />;
-      case "moderator":
-        return <Settings className="w-3 h-3 text-yellow-400" />;
-      default:
-        return <User className="w-3 h-3 text-blue-400" />;
-    }
-  };
-
-  const getRoleBadgeColor = () => {
-    switch (role) {
-      case "admin":
-        return "bg-red-500/20 text-red-400 border-red-500/30";
-      case "moderator":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      default:
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-    }
-  };
-
   return (
     <div className="w-full max-w-7xl mx-auto">
       <style jsx global>{`
@@ -275,20 +248,6 @@ export const CardUser: React.FC<Items> = ({
             >
               {title}
             </h2>
-
-            {/* Badge de rôle */}
-            <div
-              className={`
-              inline-flex items-center gap-1.5 px-2.5 py-1 
-              rounded-full border backdrop-blur-sm
-              ${getRoleBadgeColor()}
-              text-xs font-semibold uppercase tracking-wider
-              w-fit
-            `}
-            >
-              {getRoleIcon()}
-              {role}
-            </div>
           </div>
         </div>
 
@@ -340,7 +299,6 @@ export const CardUser: React.FC<Items> = ({
                     className={`${themeStyles.icon} ${sizeStyles.avatar}`}
                   />
                 )}
-
                 {/* Indicateur de statut */}
                 <div
                   className={`
@@ -353,7 +311,6 @@ export const CardUser: React.FC<Items> = ({
                 `}
                 />
               </div>
-
               {/* Nom utilisateur */}
               <div className="min-w-0 flex-1">
                 <span
@@ -377,7 +334,6 @@ export const CardUser: React.FC<Items> = ({
                 )}
               </div>
             </div>
-
             {/* Bouton dynamique - trois points ou déconnexion */}
             {!showMenu ? (
               // Bouton trois points

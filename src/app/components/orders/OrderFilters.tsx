@@ -41,7 +41,6 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
             />
           </div>
         </form>
-
         {/* Filtres */}
         <div className="flex items-center gap-4">
           {/* Filtre par statut */}
@@ -60,7 +59,6 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
               ))}
             </select>
           </div>
-
           {/* Bouton rafraîchir */}
           <button
             onClick={onRefresh}

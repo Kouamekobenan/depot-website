@@ -113,7 +113,6 @@ export default function ValidateDeliveryClient({
         })),
         status: "validated",
       });
-
       toast.success("Livraison validée avec succès !");
       router.push("/deliveries");
     } catch (error: unknown) {
@@ -153,7 +152,6 @@ export default function ValidateDeliveryClient({
       return "Non livré";
     }
   };
-
   // Statistiques
   const getDeliveryStats = () => {
     const stats = {
@@ -163,7 +161,6 @@ export default function ValidateDeliveryClient({
       withReturns: 0,
       notDelivered: 0,
     };
-
     deliveryProducts.forEach((product) => {
       const delivered = Number(product.deliveredQuantity) || 0;
       const returned = Number(product.returnedQuantity) || 0;
@@ -179,7 +176,6 @@ export default function ValidateDeliveryClient({
         stats.notDelivered++;
       }
     });
-
     return stats;
   };
 
@@ -314,7 +310,6 @@ export default function ValidateDeliveryClient({
                      </div>
                    </div>
                  </div>
-   
                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
                    <div className="flex items-center justify-between">
                      <div>

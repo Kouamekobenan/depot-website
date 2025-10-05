@@ -130,7 +130,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
               <span className="hidden sm:inline">Suivi</span>
             </Link>
           )}
-
           <Link
             href={`/detailOrder/${order.id}`}
             className="inline-flex items-center justify-center px-2 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
@@ -165,7 +164,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
           )}
         </h2>
       </div>
-
       {/* Contenu de la table */}
       <div className="divide-y divide-gray-100">
         {loading ? (
