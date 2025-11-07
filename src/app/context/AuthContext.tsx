@@ -9,15 +9,13 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<User>;
   logout: () => void;
-  refreshUser: () => Promise<void>; // Fonction utile pour rafraîchir les données utilisateur
+  refreshUser: () => Promise<void>; 
 }
 const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  // Fonction pour récupérer les données utilisateur
   const fetchUserProfile = async (token?: string): Promise<User | null> => {
     try {
       // Si pas de token fourni, essayer de le récupérer
@@ -32,13 +30,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return null;
     }
   };
-
   // Vérifier auth au chargement
   useEffect(() => {
     const checkAuth = async () => {
       try {
         setLoading(true);
-        // ✅ TokenManager ne s’exécutera que côté client
         const token =
           typeof window !== "undefined" ? await TokenManager.getToken() : null;
 
@@ -47,9 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(null);
           return;
         }
-
         const userData = await fetchUserProfile(token);
-
         if (userData) {
           setUser(userData);
           setIsAuthenticated(true);
@@ -67,8 +61,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
       }
     };
-
-    // ✅ checkAuth sera exécuté uniquement côté client
     if (typeof window !== "undefined") {
       checkAuth();
     }
@@ -90,7 +82,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!token) {
         throw new Error("Token manquant dans la réponse du serveur");
       }
-
       // Sauvegarder le token
       await TokenManager.setToken(token);
 
@@ -149,7 +140,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           );
         }
       }
-
       // Récupérer le message d'erreur de manière sécurisée
       const errorMessage =
         error instanceof Error ? error.message : "Erreur lors de la connexion";

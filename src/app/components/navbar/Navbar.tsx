@@ -194,7 +194,7 @@ export default function Navbar() {
         `}
       >
         {/* Container avec flexbox pour gérer la hauteur */}
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col max-h-full">
           {/* Header avec logo - Design premium */}
           <div className="flex-shrink-0 px-6 py-6 border-b border-slate-600/30 bg-gradient-to-r from-slate-800 via-slate-900 to-gray-900">
             <div className="flex items-center gap-4">
