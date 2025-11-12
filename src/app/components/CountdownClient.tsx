@@ -6,42 +6,28 @@ import Image from "next/image";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 // Constante pour définir la durée initiale du compte à rebours
 const INITIAL_COUNTDOWN_SECONDS = 3;
-
 export default function CountdownClient() {
   const [countdown, setCountdown] = useState(INITIAL_COUNTDOWN_SECONDS);
   const [showLogin, setShowLogin] = useState(false);
-
-  // 🔄 Logique du Compte à Rebours
   useEffect(() => {
-    // Si le compte à rebours est terminé, afficher le Login
     if (countdown === 0) {
-      // Utiliser un petit délai pour permettre à la transition de la barre de progression de se terminer
       const timeout = setTimeout(() => setShowLogin(true), 500);
       return () => clearTimeout(timeout);
     }
-
-    // Déclencher le décompte
     const timer = setTimeout(() => {
       setCountdown((prev) => prev - 1);
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [countdown]); // Se réexécute à chaque changement de 'countdown'
-
-  // 💡 Calcul du pourcentage de progression
-  // Utiliser useMemo pour un calcul optimisé et réactif
+  }, [countdown]); 
   const progressPercentage = useMemo(() => {
-    // Le pourcentage va de 0% (début) à 100% (fin)
     const elapsed = INITIAL_COUNTDOWN_SECONDS - countdown;
     return (elapsed / INITIAL_COUNTDOWN_SECONDS) * 100;
   }, [countdown]);
-
-  // Rendu de la page de connexion
   if (showLogin) {
     return (
-      // Ajout d'un conteneur principal plus épuré et centré
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors duration-500">
-        <div className="max-w-md w-full p-8 space-y-6 bg-white dark:bg-gray-800 shadow-xl rounded-2xl">
+        <div className="max-w-md w-full p-3 space-y-6 bg-white dark:bg-gray-800 shadow-xl rounded-2xl">
           <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white">
             Accéder à l&apos;Espace
           </h2>
@@ -50,7 +36,6 @@ export default function CountdownClient() {
       </div>
     );
   }
-
   // Rendu de l'écran de chargement/compte à rebours
   return (
     // 🎨 Design du fond : Dégradé plein écran, centré
@@ -108,7 +93,6 @@ export default function CountdownClient() {
               {countdown !== 1 ? "s" : ""}
             </p>
           </div>
-
           {/* 📈 Barre de progression */}
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
             <div

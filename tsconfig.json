@@ -1,44 +1,65 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    // 🌐 Compatibilité moderne (Node 18+/Next.js)
+    "target": "ES2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+
+    // ⚙️ Autoriser les fichiers JS dans le projet (utile pour next.config.mjs)
     "allowJs": true,
+    "types": [],
+    // 🚫 Ignore les erreurs dans node_modules
     "skipLibCheck": true,
+
+    // ✅ Active toutes les vérifications TypeScript strictes
     "strict": true,
+
+    // ⛔ Empêche la sortie de fichiers JS après build
     "noEmit": true,
+
+    // 🔄 Facilite les imports par défaut
     "esModuleInterop": true,
+
+    // ⚙️ Utilise le système de modules moderne
     "module": "esnext",
     "moduleResolution": "bundler",
+
+    // 🔍 Permet d’importer les fichiers JSON
     "resolveJsonModule": true,
+
+    // 🚧 Empêche la réutilisation de modules compilés
     "isolatedModules": true,
+
+    // 🧱 Support JSX
     "jsx": "preserve",
+
+    // ⚡ Compilation incrémentale (plus rapide)
     "incremental": true,
+
+    // 🧩 Plugin Next.js (obligatoire)
     "plugins": [
       {
         "name": "next"
       }
     ],
+
+    // 🛠️ Alias @ pour src/
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
+
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "../electron/preload.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
-    "next.config.js",
+    "next.config.ts", // 👈 change ici si ton fichier est .ts
     "out/types/**/*.ts",
-    "../dist/renderer/types/**/*.ts"
+    "../dist/renderer/types/**/*.ts",
+    "types/**/*.d.ts", // 👈 bon dossier pour next-pwa.d.ts
+    "next-pwa.d.ts" // 👈 ou fichier isolé
   ],
-  "exclude": [
-    "node_modules"
-  ]
+
+  "exclude": ["node_modules"]
 }

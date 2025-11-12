@@ -188,13 +188,13 @@ export default function Navbar() {
           fixed top-0 left-0 w-80 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 
           shadow-2xl border-r border-slate-600/30 z-40 transform transition-all duration-300 ease-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:static md:flex md:flex-col
+          md:translate-x-0  md:static md:flex md:flex-col
           backdrop-blur-sm
           h-screen max-h-screen overflow-hidden
         `}
       >
         {/* Container avec flexbox pour gérer la hauteur */}
-        <div className="flex flex-col max-h-full">
+        <div className="flex  flex-col max-h-full">
           {/* Header avec logo - Design premium */}
           <div className="flex-shrink-0 px-6 py-6 border-b border-slate-600/30 bg-gradient-to-r from-slate-800 via-slate-900 to-gray-900">
             <div className="flex items-center gap-4">
@@ -221,7 +221,6 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-
           {/* Navigation principale - Avec scroll optimisé */}
           <div className="flex-1 overflow-y-auto">
             <nav className="px-4 py-5">
@@ -235,7 +234,6 @@ export default function Navbar() {
                     const isActive = isItemActive(item);
                     const isSubmenuVisible = isSubmenuOpen(item);
                     const shouldHighlight = shouldHighlightParent(item);
-
                     return (
                       <li key={item.href}>
                         {/* Item principal - Style amélioré */}
@@ -369,7 +367,6 @@ export default function Navbar() {
                   })}
                 </ul>
               </section>
-
               {/* Section Acteurs - Style amélioré */}
               {user?.role === "MANAGER" && (
                 <section className="mb-6">
@@ -415,8 +412,6 @@ export default function Navbar() {
               )}
             </nav>
           </div>
-
-          {/* Contact Admin - Footer premium */}
           <div className="flex-shrink-0 px-4 py-4 border-t border-slate-600/30 bg-gradient-to-r from-slate-800 via-slate-900 to-gray-900">
             <h3 className="text-orange-400 font-bold text-xs uppercase tracking-wider mb-3 font-sans">
               Support Admin

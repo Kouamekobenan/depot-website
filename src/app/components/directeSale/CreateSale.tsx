@@ -13,6 +13,7 @@ import {
   Check,
   ShoppingCart,
   Trash2,
+  ArrowLeft,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { handleBack } from "@/app/types/handleApi";
@@ -255,44 +256,58 @@ export default function DirectSaleForm() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
-          <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
-            {/* Section principale - Gauche */}
-            <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-3">
-              {/* Bouton retour */}
-              <div className="order-first sm:order-none">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-5 sm:p-7 mb-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            {/* Section Principale - Gauche (Titre, Icône, Description) */}
+            <div className="flex items-start space-x-4 flex-1 min-w-0">
+              {/* 1. Bouton de Retour */}
+              <div className="hidden lg:block self-center">
                 <button
                   onClick={handleBack}
-                  className="w-full sm:w-auto bg-gray-700 text-white hover:bg-gray-800 p-2 cursor-pointer rounded-md text-sm font-medium flex items-center justify-center"
+                  className="p-2 text-gray-600 cursor-pointer hover:text-gray-800 hover:bg-gray-50 rounded-full transition duration-150"
+                  aria-label="Retour à la page précédente"
                 >
-                  <span className="sm:hidden">← Retour</span>
-                  <span className="hidden sm:inline">Retour</span>
+                  <span className="text-xl ">
+                    {" "}
+                    <ArrowLeft className="h-5 w-5" />
+                  </span>
                 </button>
               </div>
 
-              {/* Icône et titre */}
-              <div className="flex items-start space-x-3 flex-1">
-                <div className="bg-orange-600 p-2 rounded-lg flex-shrink-0">
-                  <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                </div>
+              {/* 2. Icône du Composant */}
+              <div className="bg-orange-500 p-3 rounded-xl flex-shrink-0 self-start">
+                <ShoppingCart className="h-6 w-6 text-white" />
+              </div>
 
-                <div className="flex-1 min-w-0">
-                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 leading-tight">
-                    <span className="block sm:inline">
-                      Espace de Vente Directe de:
-                    </span>
-                    <span className="block sm:inline mt-1 sm:mt-0 sm:ml-2">
-                      <span className="inline-block text-base sm:text-lg lg:text-xl text-green-700 bg-green-100 px-2 py-1 rounded-md break-words">
-                        {userName}
-                      </span>
-                    </span>
-                  </h1>
-                  <p className="text-sm sm:text-base text-gray-600 mt-1">
-                    Gestion des ventes et clients
-                  </p>
-                </div>
+              {/* 3. Titre et Description */}
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+                  Espace de Vente Directe
+                </p>
+                <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 truncate">
+                  {/* Le userName mis en évidence et stylisé dans le titre */}
+                  <span className="text-orange-600">{userName}</span>
+                </h1>
+                <p className="text-sm text-gray-600 mt-1">
+                  Gestion des ventes et clients —{" "}
+                  {/* Ajout d'une info complémentaire */}
+                  <span className="text-green-600 font-medium">Actif</span>
+                </p>
               </div>
             </div>
+
+            <div className="flex items-center gap-3">
+              <button className="px-4 cursor-pointer py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition">
+                Nouvelle Commande
+              </button>
+              <button
+                onClick={handleBack}
+                className="lg:hidden px-3 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition"
+              >
+                Retour
+              </button>
+            </div>
+
             {/* Section droite - Informations de vente */}
             <div className="flex justify-center lg:justify-end">
               <div className="bg-green-50 px-3 py-2 sm:px-4 rounded-lg">
@@ -305,9 +320,7 @@ export default function DirectSaleForm() {
             </div>
           </div>
         </div>
-
         <div className="grid grid-cols-12 gap-6">
-          {/* Main Content - Toujours en pleine largeur maintenant */}
           <div className="col-span-12">
             {/* Sale Type Selection */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
