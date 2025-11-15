@@ -27,9 +27,6 @@ import { dashbordItems, deliveryProducts } from "../types/type";
 import api from "../prisma/api"; // Renommé à 'apiClient' si possible pour éviter la confusion avec le type Prisma
 import Link from "next/link";
 import { subscribeToPush } from "../types/api/notification";
-
-// --- Interfaces Améliorées pour plus de clarté ---
-
 interface StatCardProps {
   title: string;
   value: string | number;
@@ -40,11 +37,6 @@ interface StatCardProps {
   description?: string;
 }
 
-// --- Composants d'UI Extraits ---
-
-/**
- * Bouton d'activation des notifications
- */
 const NotificationButton: React.FC = () => {
   const [isSubscribing, setIsSubscribing] = useState(false);
 
@@ -67,19 +59,32 @@ const NotificationButton: React.FC = () => {
     <button
       onClick={handleSubscribe}
       disabled={isSubscribing}
-      className="group relative inline-flex items-center justify-center px-2 py-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg shadow-yellow-200/50 hover:shadow-xl active:scale-95 text-sm"
+      className="group relative inline-flex items-center justify-center 
+        p-2 rounded-full h-10 w-10 sm:h-auto sm:w-auto sm:p-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-amber-600 hover:to-orange-600 
+        disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold 
+        rounded-xl transition-all duration-300 transform hover:scale-[1.05] shadow-lg shadow-yellow-400/50 hover:shadow-xl active:scale-95 
+        ring-4 ring-yellow-400/50 animate-pulse-slow"
     >
       {isSubscribing ? (
-        <Loader2 className="w-5 h-5 mr-1 animate-spin" />
+        <Loader2 className="w-5 h-5 sm:mr-1 animate-spin" />
       ) : (
-        <BellRing className="w-5 h-5 mr-1 group-hover:animate-pulse" />
+        // Sur mobile, l'icône prend tout l'espace (pas de mr-1)
+        <BellRing className="w-5 h-5 sm:mr-1 group-hover:animate-pulse" />
       )}
-      <span className="relative tracking-wide">
-        {isSubscribing ? "Activation..." : "Activer les notifications"}
+      <span
+        className="
+          relative tracking-wide 
+          hidden 
+          sm:inline 
+          md:inline
+        "
+      > {isSubscribing ? "Activation..." : "Activer les notifications"} 
       </span>
     </button>
   );
 };
+
+// ... Reste du composant AdminDashboard inchangé
 
 /**
  * Carte de statistique réutilisable
