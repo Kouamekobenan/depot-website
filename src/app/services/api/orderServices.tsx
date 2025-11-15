@@ -4,7 +4,6 @@ import {
   OrderPaginationResponse,
   OrderFilters,
 } from "../../types/api/order.types";
-
 interface ParamItem {
   limit: number;
   page: number;
@@ -39,7 +38,6 @@ export class OrderService {
         `${this.ENDPOINT}/paginate/${tenantId}`,
         { params }
       );
-
       return response.data;
     } catch (error) {
       console.error("Erreur lors de la récupération des commandes:", error);
@@ -78,7 +76,6 @@ export class OrderService {
       throw new Error("Impossible de mettre à jour le statut");
     }
   }
-
   /**
    * Crée une nouvelle commande
    */
@@ -91,7 +88,6 @@ export class OrderService {
       throw new Error("Impossible de créer la commande");
     }
   }
-
   /**
    * Supprime une commande
    */
@@ -103,7 +99,6 @@ export class OrderService {
       throw new Error("Impossible de supprimer la commande");
     }
   }
-
   /**
    * Annule une commande
    */

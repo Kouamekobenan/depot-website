@@ -200,11 +200,11 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               <div className="relative group">
                 <Image
-                  src="/logo.png"
+                  src="/logo12.png"
                   width={48}
                   height={48}
                   alt="Logo DrinkFlow - Système de gestion"
-                  className="rounded-xl border-2 border-orange-500 shadow-xl transition-transform duration-300 group-hover:scale-105"
+                  className="rounded-xl border-2 border-white shadow-xl transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-slate-900 animate-pulse"></div>
               </div>
