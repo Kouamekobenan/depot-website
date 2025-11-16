@@ -60,7 +60,7 @@ const NotificationButton: React.FC = () => {
       onClick={handleSubscribe}
       disabled={isSubscribing}
       className="group relative inline-flex items-center justify-center 
-        p-2 rounded-full h-10 w-10 sm:h-auto sm:w-auto sm:p-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-amber-600 hover:to-orange-600 
+        p-2 h-10 w-10 sm:h-auto sm:w-auto sm:p-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-amber-600 hover:to-orange-600 
         disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold 
         rounded-xl transition-all duration-300 transform hover:scale-[1.05] shadow-lg shadow-yellow-400/50 hover:shadow-xl active:scale-95 
         ring-4 ring-yellow-400/50 animate-pulse-slow"
@@ -84,11 +84,6 @@ const NotificationButton: React.FC = () => {
   );
 };
 
-// ... Reste du composant AdminDashboard inchangé
-
-/**
- * Carte de statistique réutilisable
- */
 const StatCard: React.FC<StatCardProps> = ({
   title,
   value,
@@ -202,7 +197,6 @@ const AdminDashboard: React.FC = () => {
     const fetchDashboard = async () => {
       setDashboardLoading(true);
       try {
-        // Utilisation de try/catch pour une meilleure gestion des erreurs
         const res = await api.get<dashbordItems>(`/dashbord/${tenantId}`);
         setDashboard(res.data);
       } catch (error) {
@@ -279,7 +273,6 @@ const AdminDashboard: React.FC = () => {
           backdrop-filter: blur(2px);
         }
       `}</style>
-
       <div className="flex min-h-screen">
         {/* Mobile Sidebar Overlay */}
         {sidebarOpen && (
@@ -297,29 +290,24 @@ const AdminDashboard: React.FC = () => {
         `}
         >
           {/* Mobile Header (fermeture) */}
-          <div className="md:hidden flex items-center justify-between p-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
+          <div className="md:hidden flex items-center justify-between p-4 border-b border-slate-200 bg-gradient-to-r from-gray-900 to-gray-800">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-gradient-to-br from-orange-500 to-pink-600 rounded-lg shadow-md">
                 <Home className="h-5 w-5 text-white" />
               </div>
-              <span className="text-lg font-bold text-slate-900 tracking-tight">
-                12DEPOT
-              </span>
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
               className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-200"
             >
-              <X className="h-5 w-5 text-slate-600" />
+              <X className="h-5 w-5 text-white" />
             </button>
           </div>
-
           {/* Navigation Content */}
           <div className="h-full overflow-y-auto">
             <Navbar />
           </div>
         </div>
-
         {/* Main Content */}
         <main className="flex-1 min-w-0 md:ml-0">
           {/* Top Bar Mobile (ouvre) */}
@@ -347,7 +335,6 @@ const AdminDashboard: React.FC = () => {
                   )}
                 </div>
               </div>
-
               {/* Boutons d'actions Mobile */}
               <div className="flex space-x-2">
                 <NotificationButton />
@@ -396,7 +383,6 @@ const AdminDashboard: React.FC = () => {
                       </div>
                     </div>
                   </div>
-
                   {/* Boutons d'actions Desktop */}
                   <div className="flex space-x-4">
                     <NotificationButton />
@@ -484,7 +470,6 @@ const AdminDashboard: React.FC = () => {
             <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-2xl" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-emerald-500/5 to-blue-500/5 rounded-full blur-2xl" />
-
               <div className="relative">
                 <div className="flex items-center mb-8">
                   <div className="p-4 bg-gradient-to-br from-slate-600 to-slate-700 rounded-2xl mr-6 shadow-lg shadow-slate-200/40">
@@ -499,7 +484,6 @@ const AdminDashboard: React.FC = () => {
                     </p>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 items-end">
                   {/* Date de début */}
                   <div className="space-y-3">
