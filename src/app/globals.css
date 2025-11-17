@@ -24,7 +24,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-   --font-roboto: "Roboto", system-ui, -apple-system, sans-serif;
+  --font-roboto: "Roboto", system-ui, -apple-system, sans-serif;
   --font-poppins: "Poppins", system-ui, -apple-system, sans-serif;
   --font-inter: "Inter", system-ui, -apple-system, sans-serif;
 

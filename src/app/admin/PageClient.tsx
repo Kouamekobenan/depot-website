@@ -15,9 +15,8 @@ import {
   DollarSign,
   Activity,
   Target,
-  Menu,
-  X,
-  Home,
+  // X,
+  // Home,
   BellRing,
 } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
@@ -78,7 +77,9 @@ const NotificationButton: React.FC = () => {
           sm:inline 
           md:inline
         "
-      > {isSubscribing ? "Activation..." : "Activer les notifications"} 
+      >
+        {" "}
+        {isSubscribing ? "Activation..." : "Activer les notifications"} 
       </span>
     </button>
   );
@@ -189,7 +190,6 @@ const AdminDashboard: React.FC = () => {
       }).format(amount) + " FCFA"
     );
   };
-
   // 1. Chargement des stats globales (au montage)
   useEffect(() => {
     if (!tenantId) return;
@@ -290,19 +290,7 @@ const AdminDashboard: React.FC = () => {
         `}
         >
           {/* Mobile Header (fermeture) */}
-          <div className="md:hidden flex items-center justify-between p-4 border-b border-slate-200 bg-gradient-to-r from-gray-900 to-gray-800">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-br from-orange-500 to-pink-600 rounded-lg shadow-md">
-                <Home className="h-5 w-5 text-white" />
-              </div>
-            </div>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-200"
-            >
-              <X className="h-5 w-5 text-white" />
-            </button>
-          </div>
+          <div className="md:hidden flex items-center justify-between p-4 border-b border-slate-200 bg-gradient-to-r from-gray-900 to-gray-800"></div>
           {/* Navigation Content */}
           <div className="h-full overflow-y-auto">
             <Navbar />
@@ -313,18 +301,13 @@ const AdminDashboard: React.FC = () => {
           {/* Top Bar Mobile (ouvre) */}
           <div className="md:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-slate-200">
             <div className="flex items-center justify-between p-4">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-200"
-              >
-                <Menu className="h-6 w-6 text-slate-700" />
-              </button>
+              <div className="">
+                {" "}
+                <Navbar />
+              </div>
 
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-br from-orange-500 to-pink-600 rounded-lg shadow-sm">
-                  <Sheet className="h-5 w-5 text-white" />
-                </div>
-                <div>
+                <div className="">
                   <h1 className="text-lg font-bold text-slate-900 tracking-tight">
                     Dashboard
                   </h1>
@@ -359,7 +342,6 @@ const AdminDashboard: React.FC = () => {
                     }}
                   />
                 </div>
-
                 <div className="relative flex items-center justify-between">
                   <div className="flex items-center space-x-6">
                     <div className="relative">
@@ -399,7 +381,6 @@ const AdminDashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {dashboardLoading ? (
@@ -465,7 +446,6 @@ const AdminDashboard: React.FC = () => {
                 </>
               )}
             </div>
-
             {/* Period Analysis */}
             <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm border border-slate-200/60 p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-2xl" />
@@ -498,7 +478,6 @@ const AdminDashboard: React.FC = () => {
                       className="w-full px-4 py-4 bg-slate-50/80 border border-slate-200 rounded-xl text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all duration-200 backdrop-blur-sm hover:bg-white"
                     />
                   </div>
-
                   {/* Date de fin */}
                   <div className="space-y-3">
                     <label className="flex items-center text-sm font-bold text-slate-700 tracking-wide uppercase">
