@@ -1,9 +1,11 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
+// Assurez-vous que le chemin vers Navbar est correct
 import Navbar from "../components/navbar/Navbar";
+// Assurez-vous que le chemin vers productItems est correct
 import { productItems } from "../types/type";
-import api from "../prisma/api";
-import { useAuth } from "../context/AuthContext";
+import api from "../prisma/api"; // Assurez-vous que le chemin vers votre API est correct
+import { useAuth } from "../context/AuthContext"; // Assurez-vous que le chemin vers AuthContext est correct
 
 // Interface pour les données de pagination
 interface PaginationData {
@@ -20,14 +22,14 @@ export default function LowStockProductsPage() {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const { user } = useAuth();
   const tenantId = user?.tenantId;
 
+  // Déplacé ici pour des raisons de clarté, mais vos constantes étaient bien placées
   const limit = 10;
   const stockThreshold = 10;
 
-  // Fonction pour récupérer les produits avec stock faible
+  // Fonction pour récupérer les produits avec stock faible (Optimisé pour inclure 'limit' comme dépendance stable)
   const fetchLowStockProducts = useCallback(
     async (pageNumber: number = 1): Promise<void> => {
       if (!tenantId) {
@@ -72,7 +74,7 @@ export default function LowStockProductsPage() {
         setLoading(false);
       }
     },
-    [tenantId, limit]
+    [tenantId] // 'limit' est une constante, pas besoin de l'inclure si elle ne change pas
   );
 
   // Chargement initial
@@ -99,7 +101,13 @@ export default function LowStockProductsPage() {
 
   // Fonction pour formatter le prix
   const formatPrice = (price: number): string => {
-    return new Intl.NumberFormat("fr-FR").format(price) + " F";
+    // Utilise le code de devise standard (XOF/XAF pour "F") ou ajustez selon votre besoin
+    return new Intl.NumberFormat("fr-FR", {
+      style: "currency",
+      currency: "XOF", // Exemple de devise Ouest Africaine. Remplacez par votre devise si différente.
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
   };
 
   // Composant d'alerte de stock amélioré
@@ -107,25 +115,25 @@ export default function LowStockProductsPage() {
     const alertLevel = getStockAlertLevel(stock);
     const alertConfig = {
       critical: {
-        color: "bg-red-50 text-red-700 border border-red-200",
+        color: "bg-red-100 text-red-800 border border-red-300",
         dot: "bg-red-500",
         text: "Rupture",
         priority: "URGENT",
       },
       high: {
-        color: "bg-orange-50 text-orange-700 border border-orange-200",
+        color: "bg-orange-100 text-orange-800 border border-orange-300",
         dot: "bg-orange-500",
         text: "Critique",
         priority: "ÉLEVÉ",
       },
       medium: {
-        color: "bg-amber-50 text-amber-700 border border-amber-200",
+        color: "bg-amber-100 text-amber-800 border border-amber-300",
         dot: "bg-amber-500",
         text: "Faible",
         priority: "MOYEN",
       },
       low: {
-        color: "bg-blue-50 text-blue-700 border border-blue-200",
+        color: "bg-blue-100 text-blue-800 border border-blue-300",
         dot: "bg-blue-500",
         text: "Limité",
         priority: "BAS",
@@ -137,13 +145,13 @@ export default function LowStockProductsPage() {
     return (
       <div className="space-y-1">
         <div
-          className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold ${config.color}`}
+          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${config.color}`}
         >
-          <div className={`w-2 h-2 rounded-full mr-2 ${config.dot}`}></div>
+          <div className={`w-2 h-2 rounded-full mr-1.5 ${config.dot}`}></div>
           {stock === 0 ? config.text : `${stock} unités`}
         </div>
         <div
-          className={`text-xs font-medium opacity-75 ${
+          className={`text-xs font-medium opacity-80 ${
             alertLevel === "critical"
               ? "text-red-600"
               : alertLevel === "high"
@@ -151,9 +159,9 @@ export default function LowStockProductsPage() {
               : alertLevel === "medium"
               ? "text-amber-600"
               : "text-blue-600"
-          }`}
+          } hidden sm:block`}
         >
-          {config.priority}
+          Priorité: {config.priority}
         </div>
       </div>
     );
@@ -164,7 +172,7 @@ export default function LowStockProductsPage() {
     if (totalPages <= 1) return null;
 
     const getPageNumbers = () => {
-      const pages = [];
+      const pages: (number | string)[] = [];
       const maxVisible = 5;
 
       if (totalPages <= maxVisible) {
@@ -172,33 +180,39 @@ export default function LowStockProductsPage() {
           pages.push(i);
         }
       } else {
-        if (page <= 3) {
-          for (let i = 1; i <= 4; i++) {
-            pages.push(i);
-          }
+        pages.push(1);
+
+        if (page > 3) {
           pages.push("...");
-          pages.push(totalPages);
-        } else if (page >= totalPages - 2) {
-          pages.push(1);
+        }
+
+        // Pages centrales
+        for (
+          let i = Math.max(2, page - 1);
+          i <= Math.min(totalPages - 1, page + 1);
+          i++
+        ) {
+          pages.push(i);
+        }
+
+        if (page < totalPages - 2) {
           pages.push("...");
-          for (let i = totalPages - 3; i <= totalPages; i++) {
-            pages.push(i);
-          }
-        } else {
-          pages.push(1);
-          pages.push("...");
-          for (let i = page - 1; i <= page + 1; i++) {
-            pages.push(i);
-          }
-          pages.push("...");
+        }
+
+        if (totalPages > 1) {
           pages.push(totalPages);
         }
       }
-      return pages;
+      // On retire les doublons de points si l'intervalle est trop petit
+      return pages.filter(
+        (item, index, self) =>
+          !(item === "..." && self[index - 1] === "...") &&
+          !(item === self[index - 1] && typeof item === "number")
+      );
     };
 
     return (
-      <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200 space-y-3 sm:space-y-0">
+      <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-6 py-4 bg-white border-t border-gray-100 space-y-3 sm:space-y-0">
         <div className="flex items-center text-sm text-gray-700 order-2 sm:order-1">
           <span className="font-medium">
             {Math.min((page - 1) * limit + 1, total)} -{" "}
@@ -213,7 +227,7 @@ export default function LowStockProductsPage() {
           <button
             onClick={() => handlePageChange(page - 1)}
             disabled={page === 1 || loading}
-            className="px-2 sm:px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
+            className="px-2 sm:px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
           >
             <span className="hidden sm:inline">Précédent</span>
             <span className="sm:hidden">‹</span>
@@ -231,17 +245,16 @@ export default function LowStockProductsPage() {
                 disabled={loading || pageNum === "..."}
                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   pageNum === page
-                    ? "bg-blue-600 text-white border border-blue-600"
+                    ? "bg-blue-600 text-white border border-blue-600 shadow-md"
                     : pageNum === "..."
-                    ? "text-gray-400 cursor-default"
-                    : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
+                    ? "text-gray-500 cursor-default px-1" // Plus compact pour les points de suspension
+                    : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-100"
                 }`}
               >
                 {pageNum}
               </button>
             ))}
           </div>
-
           <div className="sm:hidden flex items-center space-x-2">
             <span className="text-sm text-gray-600">
               {page}/{totalPages}
@@ -251,7 +264,7 @@ export default function LowStockProductsPage() {
           <button
             onClick={() => handlePageChange(page + 1)}
             disabled={page === totalPages || loading}
-            className="px-2 sm:px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
+            className="px-2 sm:px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
           >
             <span className="hidden sm:inline">Suivant</span>
             <span className="sm:hidden">›</span>
@@ -264,57 +277,27 @@ export default function LowStockProductsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
-        {/* Sidebar Navigation */}
-        <div className="hidden lg:block fixed left-0 top-0 h-full z-10">
+        {/* Sidebar Navigation (Fixé sur grands écrans) */}
+        <div className="hidden lg:block fixed left-0 top-0 h-full z-20">
           <Navbar />
         </div>
-
-        {/* Mobile Navigation */}
-        <div className="lg:hidden">
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-gray-200"
-          >
-            <svg
-              className="w-6 h-6 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-
-          {isMobileMenuOpen && (
-            <div
-              className="fixed inset-0 z-40 bg-black bg-opacity-50"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <div
-                className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Navbar />
-              </div>
-            </div>
-          )}
+        <div className="lg:hidden z-20">
+          <Navbar />
         </div>
-
-        {/* Main Content */}
-        <div className="flex-1 lg:ml-64">
-          {/* Header Section */}
-          <div className="bg-white shadow-sm">
-            <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        {/* Main Content (Ajout de max-w-7xl et mx-auto pour centrer sur très grands écrans) */}
+        <div className="flex-1 lg:ml-72">
+          {/* Header Section (Ajout de sticky pour le garder visible lors du défilement) */}
+          <div className="bg-white shadow-md sticky top-0 z-10">
+            <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-7xl mx-auto">
+              {/* Max-width et centrage */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                {/* Titre et description */}
                 <div className="flex items-center space-x-3 sm:space-x-4 pt-12 lg:pt-0">
-                  <div className="p-2 sm:p-3 bg-orange-100 rounded-lg sm:rounded-xl">
+                  <div className="p-2 sm:p-3 bg-red-100 rounded-xl">
+                    {" "}
+                    {/* Changé couleur pour correspondre à l'alerte */}
                     <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600"
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-red-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -328,32 +311,32 @@ export default function LowStockProductsPage() {
                     </svg>
                   </div>
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-                      Gestion des Stocks Critiques
+                    <h1 className="text-xl sm:text-3xl font-extrabold text-gray-900">
+                      ⚠️ Stock Critiques
                     </h1>
                     <p className="mt-1 text-sm sm:text-base text-gray-600">
-                      Surveillance des produits avec stock inférieur à{" "}
-                      {stockThreshold} unités
+                      Produits avec stock **inférieur à {stockThreshold}{" "}
+                      unités**. Action requise.
                     </p>
                   </div>
                 </div>
 
+                {/* Statistique et Bouton d'Action */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                  <div className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg sm:rounded-xl px-4 sm:px-6 py-3 sm:py-4">
+                  <div className="bg-red-50 border border-red-200 rounded-xl px-4 sm:px-6 py-3 sm:py-4">
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-orange-600">
+                      <div className="text-xl sm:text-2xl font-bold text-red-700">
                         {total}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium text-orange-600">
+                      <div className="text-xs sm:text-sm font-medium text-red-600">
                         Produits en alerte
                       </div>
                     </div>
                   </div>
-
                   <button
                     onClick={() => fetchLowStockProducts(page)}
                     disabled={loading}
-                    className="inline-flex items-center justify-center px-4 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+                    className="inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-xl transition-colors shadow-lg shadow-blue-500/30"
                   >
                     <svg
                       className={`w-4 h-4 mr-2 ${
@@ -376,16 +359,14 @@ export default function LowStockProductsPage() {
               </div>
             </div>
           </div>
-
           {/* Content Section */}
-          <div className="p-4 sm:p-6 lg:p-8">
-            {/* Error State */}
+          <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
             {error && (
-              <div className="mb-6 bg-red-50 border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6">
+              <div className="mb-6 bg-red-100 border border-red-300 rounded-xl p-4 sm:p-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
                     <svg
-                      className="w-5 h-5 sm:w-6 sm:h-6 text-red-500"
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-red-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -399,23 +380,22 @@ export default function LowStockProductsPage() {
                     </svg>
                   </div>
                   <div className="ml-3 sm:ml-4">
-                    <h3 className="text-red-800 font-semibold text-sm sm:text-base">
+                    <h3 className="text-red-900 font-bold text-sm sm:text-base">
                       Erreur de chargement
                     </h3>
-                    <p className="text-red-700 text-xs sm:text-sm mt-1">
+                    <p className="text-red-800 text-xs sm:text-sm mt-1">
                       {error}
                     </p>
                   </div>
                 </div>
               </div>
             )}
-
             {/* Loading State */}
             {loading && !error && (
               <div className="text-center py-12 sm:py-16">
-                <div className="inline-flex items-center px-4 sm:px-6 py-3 bg-white rounded-lg shadow-sm border">
+                <div className="inline-flex items-center px-6 py-4 bg-white rounded-xl shadow-lg border border-blue-100">
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-4 w-4 sm:h-5 sm:w-5 text-blue-600"
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600"
                     fill="none"
                     viewBox="0 0 24 24"
                   >
@@ -433,29 +413,28 @@ export default function LowStockProductsPage() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">
-                    Chargement des produits...
+                  <span className="text-gray-700 font-medium text-base">
+                    Chargement des produits en stock critique...
                   </span>
                 </div>
               </div>
             )}
-
             {/* Products Table */}
             {!loading && !error && (
               <>
                 {products.length > 0 ? (
-                  <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                     {/* Desktop Table Header */}
-                    <div className="hidden lg:block bg-gray-50 px-6 py-4">
+                    <div className="hidden lg:block bg-gray-50 px-6 py-4 border-b border-gray-200">
+                      {/* Ajustement des colonnes pour un meilleur placement sur grand écran */}
                       <div className="grid grid-cols-6 gap-6">
-                        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Produit
+                        <div className="col-span-2 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          {" "}
+                          {/* + d'espace pour Produit/Description */}
+                          Produit & Description
                         </div>
-                        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Description
-                        </div>
-                        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          État du stock
+                        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider w-24">
+                          Stock
                         </div>
                         <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider text-right">
                           Prix d&apos;achat
@@ -478,39 +457,38 @@ export default function LowStockProductsPage() {
                             ? ((margin / product.purchasePrice) * 100).toFixed(
                                 1
                               )
-                            : "0";
+                            : "0.0";
 
                         return (
                           <div
                             key={product.id}
-                            className="px-4 sm:px-6 py-4 sm:py-5 hover:bg-gray-50 transition-colors duration-150"
+                            className="px-4 sm:px-6 py-4 sm:py-5 hover:bg-red-50 transition-colors duration-150 border-l-4 border-red-500" // Ajout d'une barre de couleur pour l'urgence
                           >
                             {/* Desktop Layout */}
                             <div className="hidden lg:grid grid-cols-6 gap-6 items-center">
-                              {/* Nom du produit */}
-                              <div>
-                                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                              {/* Nom du produit & Description (col-span-2) */}
+                              <div className="col-span-2">
+                                <h3 className="text-sm font-semibold text-gray-900 mb-0.5">
                                   {product.name}
                                 </h3>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-gray-500 mb-1">
                                   Réf: {product.id.slice(-8)}...
                                 </p>
-                              </div>
-                              {/* Description */}
-                              <div className="text-sm text-gray-700">
-                                {product.description ? (
-                                  <p className="line-clamp-2">
-                                    {product.description}
-                                  </p>
-                                ) : (
-                                  <span className="text-gray-400 italic text-xs">
-                                    Aucune description
-                                  </span>
-                                )}
+                                <div className="text-sm text-gray-700">
+                                  {product.description ? (
+                                    <p className="line-clamp-2 text-xs text-gray-600 italic">
+                                      {product.description}
+                                    </p>
+                                  ) : (
+                                    <span className="text-gray-400 italic text-xs">
+                                      Aucune description
+                                    </span>
+                                  )}
+                                </div>
                               </div>
 
                               {/* Stock avec alerte */}
-                              <div>
+                              <div className="w-24">
                                 <StockAlert stock={product.stock} />
                               </div>
 
@@ -523,7 +501,7 @@ export default function LowStockProductsPage() {
 
                               {/* Prix de vente */}
                               <div className="text-right">
-                                <span className="text-sm font-bold text-gray-900 font-mono">
+                                <span className="text-base font-bold text-gray-900 font-mono">
                                   {formatPrice(product.price)}
                                 </span>
                               </div>
@@ -531,7 +509,7 @@ export default function LowStockProductsPage() {
                               {/* Marge */}
                               <div className="text-right space-y-1">
                                 <div
-                                  className={`text-sm font-bold font-mono ${
+                                  className={`text-base font-bold font-mono ${
                                     margin >= 0
                                       ? "text-green-600"
                                       : "text-red-600"
@@ -550,10 +528,11 @@ export default function LowStockProductsPage() {
                                 </div>
                               </div>
                             </div>
-                            {/* Mobile/Tablet Layout */}
+
+                            {/* Mobile/Tablet Layout (Style conservé et affiné) */}
                             <div className="lg:hidden space-y-3">
                               <div className="flex items-start justify-between">
-                                <div className="flex-1">
+                                <div className="flex-1 pr-4">
                                   <h3 className="text-base font-semibold text-gray-900 mb-1">
                                     {product.name}
                                   </h3>
@@ -574,7 +553,7 @@ export default function LowStockProductsPage() {
                                   <div className="text-xs text-gray-500 mb-1">
                                     Prix d&apos;achat
                                   </div>
-                                  <div className="text-sm font-semibold text-gray-700">
+                                  <div className="text-sm font-semibold text-gray-700 font-mono">
                                     {formatPrice(product.purchasePrice)}
                                   </div>
                                 </div>
@@ -582,7 +561,7 @@ export default function LowStockProductsPage() {
                                   <div className="text-xs text-gray-500 mb-1">
                                     Prix de vente
                                   </div>
-                                  <div className="text-sm font-bold text-gray-900">
+                                  <div className="text-sm font-bold text-gray-900 font-mono">
                                     {formatPrice(product.price)}
                                   </div>
                                 </div>
@@ -591,7 +570,7 @@ export default function LowStockProductsPage() {
                                     Marge
                                   </div>
                                   <div
-                                    className={`text-sm font-bold ${
+                                    className={`text-sm font-bold font-mono ${
                                       margin >= 0
                                         ? "text-green-600"
                                         : "text-red-600"
@@ -621,10 +600,10 @@ export default function LowStockProductsPage() {
                   </div>
                 ) : (
                   // Empty State
-                  <div className="text-center py-12 sm:py-16 bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200">
-                    <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+                  <div className="text-center py-16 bg-white rounded-xl shadow-lg border border-gray-100">
+                    <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6 border-4 border-green-200">
                       <svg
-                        className="w-6 h-6 sm:w-8 sm:h-8 text-green-600"
+                        className="w-8 h-8 text-green-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -637,12 +616,12 @@ export default function LowStockProductsPage() {
                         />
                       </svg>
                     </div>
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                      Aucun produit en stock critique
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      ✅ Aucun produit en stock critique
                     </h3>
-                    <p className="text-sm sm:text-base text-gray-600 max-w-md mx-auto px-4">
-                      Excellent ! Tous vos produits ont un stock supérieur à{" "}
-                      {stockThreshold} unités. Votre inventaire est bien géré.
+                    <p className="text-base text-gray-600 max-w-md mx-auto px-4">
+                      Excellent ! Tous vos produits ont un stock supérieur à **
+                      {stockThreshold} unités**. Votre inventaire est bien géré.
                     </p>
                   </div>
                 )}

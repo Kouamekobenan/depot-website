@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Providers from "./providers";
-
 export const metadata: Metadata = {
   title: "12Depôt",
   description: "Logiciel de gestion",

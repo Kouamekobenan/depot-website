@@ -34,13 +34,11 @@ export async function subscribeToPush(): Promise<void> {
 
     // 4. Vérifier si déjà abonné
     let subscription = await swReg.pushManager.getSubscription();
-
     if (!subscription) {
       // 5. Récupérer la clé publique VAPID
       const response = await api.get("/users/push/public-key");
       console.log("User public pushSubscription:", response.data);
       const publicKey = response.data.publicKey;
-
       // 6. S'abonner aux notifications push
       subscription = await swReg.pushManager.subscribe({
         userVisibleOnly: true,
@@ -50,10 +48,8 @@ export async function subscribeToPush(): Promise<void> {
     } else {
       console.log("ℹ️ Déjà abonné aux notifications");
     }
-
     // 7. Envoyer la souscription au backend
     const subscriptionJson = subscription.toJSON();
-
     // ✅ Utiliser votre instance API qui gère automatiquement le token
     const result = await api.patch(
       "/users/push-subscription",

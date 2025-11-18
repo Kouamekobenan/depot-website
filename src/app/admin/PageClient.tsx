@@ -15,13 +15,10 @@ import {
   DollarSign,
   Activity,
   Target,
-  // X,
-  // Home,
   BellRing,
 } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
 import { useAuth } from "../context/AuthContext";
-// Assurez-vous que ces types sont correctement définis
 import { dashbordItems, deliveryProducts } from "../types/type";
 import api from "../prisma/api"; // Renommé à 'apiClient' si possible pour éviter la confusion avec le type Prisma
 import Link from "next/link";

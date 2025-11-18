@@ -98,7 +98,6 @@ export default function NewClientPage() {
             </div>
           </div>
         </div>
-
         {/* Form */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <form onSubmit={handleClientSubmit} className="space-y-6">
