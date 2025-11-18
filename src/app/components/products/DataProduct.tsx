@@ -45,7 +45,6 @@ interface paginateItem {
 // Configuration des constantes
 const PRODUCTS_PER_PAGE = 5;
 const DEBOUNCE_DELAY = 300;
-
 // Hook personnalisé pour le debounce
 const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -194,15 +193,6 @@ export default function DataProduct() {
       });
     }
   };
-
-  // Fonction pour naviguer vers la page d'achat (provisioning)
-  const handleNavigateToProvisioning = useCallback(
-    (productId: string) => {
-      router.push(`/products/provisionning/${productId}`);
-    },
-    [router]
-  );
-
   // Effet pour charger les produits
   useEffect(() => {
     const filters: ProductFilters = {
@@ -409,13 +399,34 @@ export default function DataProduct() {
               )}
               <span>{isDeleting ? "Suppression..." : "Supprimer"}</span>
             </button>
-            <button
-              onClick={() => handleNavigateToProvisioning(product.id)}
-              className="flex items-center justify-center gap-2 px-3 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-all duration-200 text-sm font-medium min-h-[40px] active:scale-95"
+
+            <Link
+              href={`/products/provisionning/${product.id}`}
+              className="flex 
+    items-center 
+    justify-center 
+    gap-2 
+    px-4 
+    py-2.5 
+    bg-orange-600 
+    hover:bg-orange-700 
+    text-white 
+    text-sm 
+    font-medium 
+    rounded-lg 
+    transition-all 
+    duration-200 
+    hover:scale-[1.02] 
+    hover:shadow-lg
+    active:scale-95
+    min-w-[100px]
+  "
+              title="Réapprovisionner" // Garder le titre pour l'accessibilité
             >
-              <ShoppingCart size={16} />
-              <span>Achat</span>
-            </button>
+              <ShoppingCart size={18} /> {/* Icône légèrement plus grande */}
+              <span className="whitespace-nowrap">Achat</span>{" "}
+              {/* Assure que le texte ne saute pas à la ligne */}
+            </Link>
           </div>
         )}
       </div>
