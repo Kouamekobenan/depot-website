@@ -1,124 +1,50 @@
 "use client";
-import api, { formatDate } from "@/app/prisma/api";
+import api from "@/app/prisma/api";
 import { directSaleDto } from "@/app/types/type";
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import {
-  Search,
-  CreditCard,
-  User,
-  Calendar,
-  Package,
-  AlertCircle,
-  CheckCircle2,
-  ArrowLeft,
-  SwissFranc,
-  X,
-} from "lucide-react";
+import { Search, CreditCard, ArrowLeft, AlertCircle } from "lucide-react";
 import { handleBack } from "@/app/types/handleApi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
-interface CreditPaymentForm {
+import CreditStatistics from "./component/CreditStatistics";
+import CreditListCard from "./component/CreditListCard";
+import CreditPaymentModal from "./component/CreditPaymentModal";
+// Import des nouveaux composants
+
+// Renommé pour la clarté (était CreditPaymentForm)
+interface CreditPaymentData {
   directSaleId: string;
   amount: string;
 }
 
-interface PaymentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedSale: directSaleDto | null;
-  creditPayment: CreditPaymentForm;
-  onAmountChange: (value: string) => void;
-  onSubmit: () => void;
-  isSubmitting: boolean;
-}
-
-const PaymentModal: React.FC<PaymentModalProps> = ({
-  isOpen,
-  onClose,
-  selectedSale,
-  creditPayment,
-  onAmountChange,
-  onSubmit,
-  isSubmitting,
-}) => {
-  if (!isOpen || !selectedSale) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">
-            Paiement de crédit
-          </h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="space-y-4 mb-6">
-          <p className="text-gray-600">
-            <span className="font-medium">Client:</span>{" "}
-            {selectedSale.customer.name}
-          </p>
-          <p className="text-gray-600">
-            <span className="font-medium">Montant restant:</span>{" "}
-            <span className="text-red-600 font-semibold">
-              {selectedSale.dueAmount.toLocaleString()} F
-            </span>
-          </p>
-          <div>
-            <label
-              htmlFor="amount"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Montant à payer
-            </label>
-            <input
-              id="amount"
-              type="text"
-              value={creditPayment.amount}
-              onChange={(e) => onAmountChange(e.target.value)}
-              placeholder="0.00"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              disabled={isSubmitting}
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-3">
-          <button
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
-          >
-            Annuler
-          </button>
-          <button
-            onClick={onSubmit}
-            disabled={isSubmitting}
-            className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 flex items-center justify-center"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Traitement...
-              </>
-            ) : (
-              "Confirmer"
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+// Fonction de configuration des statuts (plus robuste)
+const PAYMENT_STATUSES = {
+  paid: {
+    status: "paid",
+    label: "Payé",
+    color: "text-green-700 bg-green-100",
+  },
+  partial: {
+    status: "partial",
+    label: "Partiellement payé",
+    color: "text-orange-700 bg-orange-100",
+  },
+  unpaid: {
+    status: "unpaid",
+    label: "Non payé",
+    color: "text-red-700 bg-red-100",
+  },
+  error: {
+    status: "error",
+    label: "Erreur",
+    color: "text-gray-600 bg-gray-100",
+  },
 };
+
 export default function PageClientCredit() {
+  // --- ÉTATS ---
   const [sales, setSales] = useState<directSaleDto[]>([]);
-  const [filteredSales, setFilteredSales] = useState<directSaleDto[]>([]);
   const [errors, setErrors] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -128,55 +54,74 @@ export default function PageClientCredit() {
   const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false);
   const [isSubmittingPayment, setIsSubmittingPayment] =
     useState<boolean>(false);
+  const [creditPayment, setCreditPayment] = useState<CreditPaymentData>({
+    directSaleId: "",
+    amount: "",
+  });
+
   const router = useRouter();
   const limit = 10;
   const { user } = useAuth();
   const tenantId = user?.tenantId;
 
-  const [creditPayment, setCreditPayment] = useState<CreditPaymentForm>({
-    directSaleId: "",
-    amount: "",
-  });
-  // Validation du formulaire de paiement
-  const validatePaymentForm = useCallback(
-    (amount: string, saleId?: string): string | null => {
-      if (!amount || amount.trim() === "") {
-        return "Veuillez saisir le montant";
-      }
+  // --- LOGIQUE / HOOKS UTILITAIRES ---
 
-      const numericAmount = Number(amount);
-      if (isNaN(numericAmount)) {
-        return "Le montant doit être un nombre valide!";
-      }
-      if (numericAmount <= 0) {
-        return "Le montant doit être supérieur à zéro!";
-      }
+  // 1. Calculs des statistiques (useMemo)
+  const statistics = useMemo(() => {
+    // Filtrage simple et rapide des crédits non payés pour l'affichage initial
+    const creditsToDisplay = sales.filter((s) => s.dueAmount > 0);
+    try {
+      const totalCredits = creditsToDisplay.length;
+      const totalAmount = creditsToDisplay.reduce(
+        (sum, sale) => sum + (sale.totalPrice || 0),
+        0
+      );
+      const totalPaid = creditsToDisplay.reduce(
+        (sum, sale) => sum + (sale.amountPaid || 0),
+        0
+      );
+      const totalDue = creditsToDisplay.reduce(
+        (sum, sale) => sum + (sale.dueAmount || 0),
+        0
+      );
 
-      if (selectedSale && numericAmount > selectedSale.dueAmount) {
-        return "Le montant ne peut pas dépasser le montant dû!";
-      }
+      return { totalCredits, totalAmount, totalPaid, totalDue };
+    } catch (error) {
+      console.error("Error calculating statistics:", error);
+      return { totalCredits: 0, totalAmount: 0, totalPaid: 0, totalDue: 0 };
+    }
+  }, [sales]);
 
-      if (!saleId) {
-        return "L'ID de la vente est manquant!";
-      }
+  // 2. Gestion du filtrage (useMemo avec useEffect pour debouncing)
+  const filteredSales = useMemo(() => {
+    if (searchTerm.trim() === "") {
+      return sales;
+    }
+    return sales.filter((sale) =>
+      sale.customer.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [sales, searchTerm]); // Pas de debouncing ici, il est géré dans l'input (ou peut être ajouté avec un hook debounce si préféré)
 
-      return null;
-    },
-    [selectedSale]
-  );
+  // 3. Fonction de récupération des données (useCallback)
   const fetchSales = useCallback(async () => {
+    if (!tenantId) {
+      setErrors("ID locataire manquant. Veuillez vous reconnecter.");
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
-      setErrors(""); // Reset errors
+      setErrors("");
 
       const result = await api.get(`/directeSale/credit/${tenantId}`, {
-        params: {
-          limit,
-          page: currentPage,
-        },
+        params: { limit, page: currentPage },
       });
       if (result.data && Array.isArray(result.data.data)) {
-        setSales(result.data.data);
+        // Filtrer côté client pour n'afficher que les crédits actifs (dueAmount > 0)
+        const activeCredits = result.data.data.filter(
+          (sale: directSaleDto) => (sale.dueAmount || 0) > 0
+        );
+        setSales(activeCredits);
         setTotalPages(result.data.totalPages || 1);
       } else {
         throw new Error("Format de données invalide");
@@ -193,12 +138,36 @@ export default function PageClientCredit() {
     }
   }, [currentPage, tenantId]);
 
-  // Gestion des paiements avec validation améliorée
+  // 4. Validation du formulaire de paiement (useCallback)
+  const validatePaymentForm = useCallback(
+    (amount: string): string | null => {
+      if (!amount || amount.trim() === "") {
+        return "Veuillez saisir le montant.";
+      }
+
+      const numericAmount = Number(amount.replace(",", "."));
+      if (isNaN(numericAmount)) {
+        return "Le montant doit être un nombre valide!";
+      }
+      if (numericAmount <= 0) {
+        return "Le montant doit être supérieur à zéro!";
+      }
+
+      if (selectedSale && numericAmount > selectedSale.dueAmount) {
+        return "Le montant ne peut pas dépasser le montant dû!";
+      }
+      if (!selectedSale?.id) {
+        return "L'ID de la vente est manquant!";
+      }
+
+      return null;
+    },
+    [selectedSale]
+  );
+
+  // 5. Gestion de la soumission de paiement (useCallback)
   const handleCreatePayment = useCallback(async () => {
-    const validationError = validatePaymentForm(
-      creditPayment.amount,
-      selectedSale?.id
-    );
+    const validationError = validatePaymentForm(creditPayment.amount);
 
     if (validationError) {
       toast.error(validationError);
@@ -208,30 +177,23 @@ export default function PageClientCredit() {
     setIsSubmittingPayment(true);
 
     try {
+      const amountToSend = Number(creditPayment.amount.replace(",", "."));
       await api.post("/creditPayment", {
         directSaleId: selectedSale?.id,
-        amount: Number(creditPayment.amount),
+        amount: amountToSend,
       });
-      toast.success("Crédit payé avec succès!");
-      // Réinitialiser le formulaire et fermer le modal
-      setCreditPayment({
-        directSaleId: "",
-        amount: "",
-      });
-      setShowPaymentModal(false);
-      setSelectedSale(null);
 
-      // Recharger les données pour refléter les changements
-      await fetchSales();
-      router.push(`/print/${selectedSale?.id}`);
+      toast.success("Crédit payé avec succès!");
+      handleCloseModal(); // Fermer et réinitialiser
+      await fetchSales(); // Recharger les données
+
+      // Optionnel: Redirection pour impression après paiement réussi
+      if (selectedSale?.id) {
+        router.push(`/print/${selectedSale.id}`);
+      }
     } catch (error: unknown) {
       console.error("Payment creation error:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      setErrors(
-        `Erreur lors de la création du paiement crédit: ${errorMessage}`
-      );
-      toast.error("Échec de la création du paiement crédit");
+      toast.error("Échec de la création du paiement crédit.");
     } finally {
       setIsSubmittingPayment(false);
     }
@@ -240,16 +202,14 @@ export default function PageClientCredit() {
     creditPayment.amount,
     selectedSale?.id,
     validatePaymentForm,
-    router, // ajouté
+    router,
   ]);
 
-  // Amélioration de la gestion des montants
+  // 6. Gestion du changement de montant (useCallback)
   const handleAmountChange = useCallback((value: string): void => {
-    // Nettoyage de la valeur (permet seulement les nombres et points/virgules)
-    const cleanedValue = value.replace(/[^0-9.,]/g, "").replace(",", ".");
-
-    // Éviter les points/virgules multiples
-    const parts = cleanedValue.split(".");
+    // Permet nombres et un seul point/virgule
+    const cleanedValue = value.replace(/[^0-9.,]/g, "");
+    const parts = cleanedValue.split(/[.,]/);
     const finalValue =
       parts.length > 2
         ? `${parts[0]}.${parts.slice(1).join("")}`
@@ -257,103 +217,22 @@ export default function PageClientCredit() {
 
     setCreditPayment((prev) => ({
       ...prev,
-      amount: finalValue,
+      amount: finalValue.replace(",", "."), // Normaliser en point pour le moteur JS
     }));
   }, []);
 
-  // Filtrage des ventes avec debouncing amélioré
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (searchTerm.trim() === "") {
-        setFilteredSales(sales);
-      } else {
-        const filtered = sales.filter((sale) =>
-          sale.customer.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredSales(filtered);
-      }
-    }, 300); // Debouncing de 300ms
-
-    return () => clearTimeout(timeoutId);
-  }, [sales, searchTerm]);
-
-  // Fonction de récupération des données extraite et améliorée
-
-  // Récupération des données
-  useEffect(() => {
-    fetchSales();
-  }, [fetchSales]);
-
-  // Calculs des statistiques avec gestion d'erreur
-  const statistics = useMemo(() => {
-    try {
-      const totalCredits = filteredSales.length;
-      const totalAmount = filteredSales.reduce(
-        (sum, sale) => sum + (sale.totalPrice || 0),
-        0
-      );
-      const totalPaid = filteredSales.reduce(
-        (sum, sale) => sum + (sale.amountPaid || 0),
-        0
-      );
-      const totalDue = filteredSales.reduce(
-        (sum, sale) => sum + (sale.dueAmount || 0),
-        0
-      );
-
-      return { totalCredits, totalAmount, totalPaid, totalDue };
-    } catch (error) {
-      console.error("Error calculating statistics:", error);
-      return { totalCredits: 0, totalAmount: 0, totalPaid: 0, totalDue: 0 };
-    }
-  }, [filteredSales]);
-
-  // Gestion optimisée des clics de paiement
+  // 7. Gestion de l'ouverture du modal (useCallback)
   const handlePaymentClick = useCallback((sale: directSaleDto) => {
     setSelectedSale(sale);
     setCreditPayment((prev) => ({
       ...prev,
       directSaleId: sale.id,
+      amount: sale.dueAmount.toFixed(2), // Pré-remplir avec le montant dû
     }));
     setShowPaymentModal(true);
   }, []);
 
-  // Fonction de statut de paiement améliorée
-  const getPaymentStatus = useCallback((sale: directSaleDto) => {
-    if (!sale.totalPrice || sale.totalPrice === 0) {
-      return {
-        status: "error",
-        label: "Erreur",
-        color: "text-gray-600 bg-gray-100",
-      };
-    }
-
-    const percentage = (sale.amountPaid / sale.totalPrice) * 100;
-
-    if (percentage >= 100) {
-      return {
-        status: "paid",
-        label: "Payé",
-        color: "text-green-600 bg-green-100",
-      };
-    }
-
-    if (percentage >= 50) {
-      return {
-        status: "partial",
-        label: "Partiellement payé",
-        color: "text-orange-600 bg-orange-100",
-      };
-    }
-
-    return {
-      status: "unpaid",
-      label: "Non payé",
-      color: "text-red-600 bg-red-100",
-    };
-  }, []);
-
-  // Gestion de la fermeture du modal
+  // 8. Gestion de la fermeture du modal (useCallback)
   const handleCloseModal = useCallback(() => {
     setShowPaymentModal(false);
     setSelectedSale(null);
@@ -363,131 +242,99 @@ export default function PageClientCredit() {
     });
   }, []);
 
-  // Gestion de la pagination
+  // 9. Fonction de statut de paiement (useCallback)
+  const getPaymentStatus = useCallback((sale: directSaleDto) => {
+    if (!sale.totalPrice || sale.totalPrice === 0) {
+      return PAYMENT_STATUSES.error;
+    }
+
+    const percentage = (sale.amountPaid / sale.totalPrice) * 100;
+
+    if (percentage >= 100) {
+      return PAYMENT_STATUSES.paid;
+    }
+    if (percentage >= 50) {
+      return PAYMENT_STATUSES.partial;
+    }
+
+    return PAYMENT_STATUSES.unpaid;
+  }, []);
+
+  // 10. Gestion de la pagination (useCallback)
   const handlePageChange = useCallback((newPage: number) => {
     setCurrentPage(newPage);
   }, []);
 
+  // --- EFFETS ---
+  useEffect(() => {
+    fetchSales();
+  }, [fetchSales]);
+
+  // --- RENDU ---
+
+  // Rendu de l'état de chargement
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement des crédits...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-700 mx-auto mb-4"></div>
+          <p className="text-xl text-gray-700 font-medium">
+            Chargement des crédits en cours...
+          </p>
         </div>
       </div>
     );
   }
 
+  // Rendu principal
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
-        {/* En-tête */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-sm md:text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <button
-                  onClick={handleBack}
-                  className="bg-gray-600 p-1 text-white rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
-                  aria-label="Retour"
-                >
-                  <ArrowLeft />
-                </button>
-                <CreditCard className="h-8 w-8 text-orange-600" />
+        {/* En-tête (Titre, Retour, Recherche) */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleBack}
+                className="bg-gray-600 p-2 text-white rounded-full cursor-pointer hover:bg-gray-700 transition-colors"
+                aria-label="Retour"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <CreditCard className="h-8 w-8 text-orange-700" />
                 Gestion des Crédits Client
               </h1>
-              <p className="text-gray-600 mt-2">
-                Suivi et gestion des paiements en crédit
-              </p>
             </div>
 
-            {/* Barre de recherche */}
-            <div className="relative w-full md:w-96">
+            {/* Barre de recherche améliorée */}
+            <div className="relative w-full md:w-80">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Rechercher un client..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-4 focus:ring-orange-200 focus:border-orange-500 transition-all outline-none"
               />
             </div>
           </div>
+          <p className="text-gray-600 mt-2 ml-14">
+            Suivi et gestion des paiements en crédit
+          </p>
         </div>
+        {/* --- FIN EN-TÊTE --- */}
 
-        {/* Statistiques */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Total Crédits
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {statistics.totalCredits}
-                </p>
-              </div>
-              <div className="h-12 w-12 bg-orange-300 rounded-lg flex items-center justify-center">
-                <CreditCard className="h-6 w-6 text-white" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Montant Total
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {statistics.totalAmount.toLocaleString()} F
-                </p>
-              </div>
-              <div className="h-12 w-12 bg-orange-300 rounded-lg flex items-center justify-center">
-                <SwissFranc className="h-6 w-6 text-white" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Montant Payé
-                </p>
-                <p className="text-2xl font-bold text-green-600">
-                  {statistics.totalPaid.toLocaleString()} F
-                </p>
-              </div>
-              <div className="h-12 w-12 bg-orange-300 rounded-lg flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-white" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Reste à Payer
-                </p>
-                <p className="text-2xl font-bold text-red-600">
-                  {statistics.totalDue.toLocaleString()} F
-                </p>
-              </div>
-              <div className="h-12 w-12 bg-orange-300 rounded-lg flex items-center justify-center">
-                <AlertCircle className="h-6 w-6 text-white" />
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Statistiques (Composant séparé) */}
+        <CreditStatistics statistics={statistics} />
 
         {/* Messages d'erreur */}
         {errors && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
-            <div className="flex">
-              <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
+          <div className="bg-red-100 border-l-4 border-red-500 p-4 mb-6 rounded-lg shadow-md">
+            <div className="flex items-center">
+              <AlertCircle className="h-6 w-6 text-red-500 flex-shrink-0" />
               <div className="ml-3">
-                <p className="text-sm text-red-700">{errors}</p>
+                <p className="text-sm font-medium text-red-800">{errors}</p>
               </div>
             </div>
           </div>
@@ -496,185 +343,43 @@ export default function PageClientCredit() {
         {/* Liste des crédits */}
         <div className="space-y-6">
           {filteredSales.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-              <CreditCard className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">Aucun crédit trouvé</p>
+            <div className="bg-white rounded-xl shadow-lg p-16 text-center border-2 border-dashed border-gray-300">
+              <CreditCard className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600 text-xl font-semibold">
+                Aucun crédit en cours
+              </p>
               {searchTerm && (
-                <p className="text-gray-400 mt-2">
-                  Aucun résultat pour: ``{searchTerm}``
+                <p className="text-gray-500 mt-2">
+                  Aucun résultat pour: **{searchTerm}**
                 </p>
               )}
             </div>
           ) : (
-            filteredSales.map((sale) => {
-              const paymentStatus = getPaymentStatus(sale);
-              const paymentPercentage =
-                sale.totalPrice > 0
-                  ? (sale.amountPaid / sale.totalPrice) * 100
-                  : 0;
-
-              return (
-                <div
-                  key={sale.id}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden"
-                >
-                  {/* En-tête du crédit */}
-                  <div className="p-6 border-b border-gray-200">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                      <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 bg-orange-300 rounded-full flex items-center justify-center">
-                          <User className="h-6 w-6 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {sale.customer.name}
-                          </h3>
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <Calendar className="h-4 w-4" />
-                            Dernière mise à jour: {formatDate(sale.updatedAt)}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${paymentStatus.color}`}
-                        >
-                          {paymentStatus.label}
-                        </span>
-                        {sale.dueAmount > 0 && (
-                          <button
-                            onClick={() => handlePaymentClick(sale)}
-                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                          >
-                            <CreditCard className="h-4 w-4" />
-                            Payer le crédit
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Détails financiers */}
-                  <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                      <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-600">Montant Total</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {sale.totalPrice.toLocaleString()} F
-                        </p>
-                      </div>
-                      <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-600">Montant Payé</p>
-                        <p className="text-2xl font-bold text-green-600">
-                          {sale.amountPaid.toLocaleString()} F
-                        </p>
-                      </div>
-                      <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-600">Reste à Payer</p>
-                        <p className="text-2xl font-bold text-red-600">
-                          {sale.dueAmount.toLocaleString()} F
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Barre de progression */}
-                    <div className="mb-6">
-                      <div className="flex justify-between text-sm text-gray-600 mb-2">
-                        <span>Progression du paiement</span>
-                        <span>{Math.round(paymentPercentage)}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${Math.min(paymentPercentage, 100)}%`,
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    {/* Liste des produits */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-4">
-                        <Package className="h-5 w-5 text-gray-600" />
-                        <h4 className="text-lg font-medium text-gray-900">
-                          Liste des Produits ({sale.saleItems?.length || 0})
-                        </h4>
-                      </div>
-                      <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Produit
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Quantité
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Prix Unitaire
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Prix Total
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white divide-y divide-gray-200">
-                            {sale.saleItems?.map((item) => (
-                              <tr key={item.id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  <div className="text-sm font-medium text-gray-900">
-                                    {item.id}
-                                  </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                  {item.quantity}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                  {item.unitPrice?.toLocaleString() || "0"} F
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  <span className="text-sm font-medium text-gray-900">
-                                    {item.totalPrice?.toLocaleString() || "0"} F
-                                  </span>
-                                </td>
-                              </tr>
-                            )) || (
-                              <tr>
-                                <td
-                                  colSpan={4}
-                                  className="px-6 py-4 text-center text-gray-500"
-                                >
-                                  Aucun produit trouvé
-                                </td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
+            filteredSales.map((sale) => (
+              <CreditListCard
+                key={sale.id}
+                sale={sale}
+                getPaymentStatus={getPaymentStatus}
+                handlePaymentClick={handlePaymentClick}
+              />
+            ))
           )}
         </div>
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center mt-8">
-            <nav className="flex items-center gap-2">
+          <div className="flex justify-center mt-10">
+            <nav className="flex items-center gap-4">
               <button
                 onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 text-base font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
               >
                 Précédent
               </button>
 
-              <span className="px-4 py-2 text-sm font-medium text-gray-700">
-                Page {currentPage} sur {totalPages}
+              <span className="px-4 py-2 text-base font-bold text-orange-700 bg-orange-100 rounded-xl">
+                Page {currentPage} / {totalPages}
               </span>
 
               <button
@@ -682,7 +387,7 @@ export default function PageClientCredit() {
                   handlePageChange(Math.min(currentPage + 1, totalPages))
                 }
                 disabled={currentPage === totalPages}
-                className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 text-base font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
               >
                 Suivant
               </button>
@@ -691,8 +396,8 @@ export default function PageClientCredit() {
         )}
       </div>
 
-      {/* Modal de paiement */}
-      <PaymentModal
+      {/* Modal de paiement (Composant séparé) */}
+      <CreditPaymentModal
         isOpen={showPaymentModal}
         onClose={handleCloseModal}
         selectedSale={selectedSale}
