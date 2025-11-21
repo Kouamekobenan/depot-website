@@ -198,7 +198,6 @@ const SuperAdmin: React.FC = () => {
       {/* Contenu principal */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-          
           {/* Formulaire de création - Sidebar sur desktop, modal sur mobile */}
           <div className={`lg:col-span-1 ${showMobileForm ? 'block' : 'hidden lg:block'}`}>
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
@@ -218,7 +217,6 @@ const SuperAdmin: React.FC = () => {
                   </button>
                 </div>
               </div>
-              
               <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
                 <div>
                   <label
